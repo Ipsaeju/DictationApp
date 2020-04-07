@@ -6,17 +6,37 @@ import {
   TextInput,
   TouchableOpacity
 } from "react-native";
+import auth from "@react-native-firebase/auth";
 
 export default class Login extends React.Component {
   state = {
     email: "",
-    password: ""
+    password: "",
+    message: ""  
   };
+
+  _userLogin = () => {
+    this.setState({message: ""});
+
+    var params = {
+      email: this.state.email,
+      password: this.state.password
+    };
+
+    auth().signInWithEmailAndPassword(params.email, params.password)
+    .then(() => this.props.navigation.navigate("Dashboard"))
+    .catch(error => this.setState({message: error.message}));
+  }
 
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.logo}>Company Name Here</Text>
+        <Text style={styles.logo}>MD Scribe</Text>
+        {!!this.state.message && (
+					<Text style={styles.warningText}>
+						{this.state.message}
+					</Text>
+				)}
         <View style={styles.inputView}>
           <TextInput
             style={styles.inputText}
@@ -43,11 +63,12 @@ export default class Login extends React.Component {
             style={styles.helperText}
             onPress={() => this.props.navigation.navigate("ForgotPass")}
           >
-            Forgot Password?
+            Reset Password
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.loginBtn}>
-          <Text style={styles.btnText} onPress={() => }>LOGIN</Text>
+        <TouchableOpacity style={styles.loginBtn} disabled={!this.state.email||!this.state.password}
+        onPress={this._userLogin}>
+          <Text style={styles.btnText}>LOGIN</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.loginBtn}
@@ -90,6 +111,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
     color: "white",
     fontSize: 12
+  },
+  warningText: {
+    color: "Red",
+    fontSize: 12,
+    padding: 5
   },
   loginBtn: {
     width: "80%",

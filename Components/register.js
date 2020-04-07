@@ -6,35 +6,50 @@ import {
   TextInput,
   TouchableOpacity
 } from "react-native";
+import auth from "@react-native-firebase/auth";
 
 export default class Register extends React.Component {
   state = {
     email: "",
     password: "",
     confirmPass: "",
-    firstName: "",
-    lastName: ""
+    message: "",
+    canRegister: false
   };
+
+  _createAccount = () => {
+    this.setState({message: "", canRegister: false});
+
+    var params = {
+      email: this.state.email,
+      password: this.state.password,
+      confirmPass: this.state.confirmPass
+    }
+
+    if(params.password != params.confirmPass) this.setState({message: "The password does not match", 
+    canRegister: false});
+    else this.setState({canRegister: true});
+
+    if(canRegister){
+      auth().createUserWithEmailAndPassword(params.email, params.password)
+      .then(() => this.props.navigation.navigate("Login"))
+      .catch(error => {
+        if(error.code === 'auth/email-already-in-use') 
+        this.setState({message: "This email is already in use!"});
+        if(error.code === 'auth/invalid-email') this.setState({message: "This email is invalid!"});
+      });
+    }
+
+  }
 
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.inputText}
-            placeholder="First Name"
-            placeholderTextColor="#003f5c"
-            onChangeText={text => this.setState({ firstName: text })}
-          />
-        </View>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.inputText}
-            placeholder="Last Name"
-            placeholderTextColor="#003f5c"
-            onChangeText={text => this.setState({ lastName: text })}
-          />
-        </View>
+        {!!this.state.message && (
+					<Text style={styles.warningText}>
+						{this.state.message}
+					</Text>
+				)}
         <View style={styles.inputView}>
           <TextInput
             style={styles.inputText}
@@ -61,7 +76,9 @@ export default class Register extends React.Component {
             onChangeText={text => this.setState({ confirmPass: text })}
           />
         </View>
-        <TouchableOpacity style={styles.registerBtn}>
+        <TouchableOpacity style={styles.registerBtn} 
+        disabled={!this.state.email || !this.state.password || !this.state.confirmPass} 
+        onPress={this._createAccount}>
           <Text style={styles.btnText}>CREATE ACCOUNT</Text>
         </TouchableOpacity>
         <Text style={styles.helperText}>Already have an account?</Text>
@@ -100,6 +117,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
     color: "white",
     fontSize: 12
+  },
+  warningText: {
+    color: "Red",
+    fontSize: 12,
+    padding: 5
   },
   registerBtn: {
     width: "80%",
