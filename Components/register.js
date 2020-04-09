@@ -7,8 +7,9 @@ import {
   TouchableOpacity
 } from "react-native";
 import auth from "@react-native-firebase/auth";
+import { withFirebaseHOC } from '../Firebase/firebase';
 
-export default class Register extends React.Component {
+class Register extends React.Component {
   state = {
     email: "",
     password: "",
@@ -17,7 +18,7 @@ export default class Register extends React.Component {
     canRegister: false
   };
 
-  _createAccount = () => {
+  _createAccount = async () => {
     this.setState({message: "", canRegister: false});
 
     var params = {
@@ -26,18 +27,24 @@ export default class Register extends React.Component {
       confirmPass: this.state.confirmPass
     }
 
-    if(params.password != params.confirmPass) this.setState({message: "The password does not match", 
+    if(params.password !== params.confirmPass) this.setState({message: "The password does not match", 
     canRegister: false});
     else this.setState({canRegister: true});
 
     if(canRegister){
-      auth().createUserWithEmailAndPassword(params.email, params.password)
-      .then(() => this.props.navigation.navigate("Login"))
-      .catch(error => {
+      try{
+        const response = await this.props.firebase.register(params.email, params.password);
+        if(response.user.uid){
+          const { uid } = response.user;
+          const userInfo = { email, password, uid };
+          await this.props.firebase.newUserAdd(userInfo);
+          this.props.navigation.navigate("Login");
+        }
+      }catch(error){
         if(error.code === 'auth/email-already-in-use') 
         this.setState({message: "This email is already in use!"});
         if(error.code === 'auth/invalid-email') this.setState({message: "This email is invalid!"});
-      });
+      }
     }
 
   }
@@ -137,3 +144,5 @@ const styles = StyleSheet.create({
     color: "white"
   }
 });
+
+export default withFirebaseHOC(Register);
