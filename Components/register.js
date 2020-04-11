@@ -25,7 +25,7 @@ class Register extends React.Component {
       email: this.state.email,
       password: this.state.password,
       confirmPass: this.state.confirmPass
-    }
+    };
 
     if(params.password !== params.confirmPass) this.setState({message: "The password does not match", 
     canRegister: false});
