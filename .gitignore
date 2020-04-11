@@ -21,6 +21,10 @@ DerivedData
 *.ipa
 *.xcuserstate
 
+# Firebase
+#
+Firebase/firebaseconfig.js
+
 # Android/IntelliJ
 #
 build/
