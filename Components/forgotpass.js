@@ -6,11 +6,26 @@ import {
   TextInput,
   TouchableOpacity
 } from "react-native";
+import { withFirebaseHOC } from '../Firebase/firebase';
 
-export default class ForgotPass extends React.Component {
+class ForgotPass extends React.Component {
   state = {
     email: ""
   };
+
+  _resetPassword = async () => {
+    var params = {
+      email: this.state.email
+    };
+
+    try{
+      await this.props.firebase.resetPass(params.email);
+      alert("Password email sent successfully");
+      this.props.navigation.navigate("Login");
+    }catch(error){
+      alert("There was an error in sending the password reset code. Please try again or contact a system admin");
+    }
+  }
 
   render() {
     return (
@@ -27,7 +42,7 @@ export default class ForgotPass extends React.Component {
             onChangeText={text => this.setState({ email: text })}
           />
         </View>
-        <TouchableOpacity style={styles.btns}>
+        <TouchableOpacity style={styles.btns} onPress={this._resetPassword}>
           <Text style={styles.btnText}>RESET PASSWORD</Text>
         </TouchableOpacity>
         <Text style={styles.helperText}>Don't need to reset password?</Text>
@@ -87,3 +102,5 @@ const styles = StyleSheet.create({
     color: "white"
   }
 });
+
+export default withFirebaseHOC(ForgotPass);

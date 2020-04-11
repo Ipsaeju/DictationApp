@@ -7,15 +7,16 @@ import {
   TouchableOpacity
 } from "react-native";
 import auth from "@react-native-firebase/auth";
+import { withFirebaseHOC } from '../Firebase/firebase';
 
-export default class Login extends React.Component {
+class Login extends React.Component {
   state = {
     email: "",
     password: "",
     message: ""  
   };
 
-  _userLogin = () => {
+  _userLogin = async () => {
     this.setState({message: ""});
 
     var params = {
@@ -23,9 +24,13 @@ export default class Login extends React.Component {
       password: this.state.password
     };
 
-    auth().signInWithEmailAndPassword(params.email, params.password)
-    .then(() => this.props.navigation.navigate("Dashboard"))
-    .catch(error => this.setState({message: error.message}));
+    try{
+      const response = await this.props.firebase.login(params.email, params.password);
+      if(response.user) this.props.navigation.navigate("Dashboard");
+    }catch(error) {
+      this.setState({message: error.message});
+    }
+
   }
 
   render() {
@@ -131,3 +136,5 @@ const styles = StyleSheet.create({
     color: "white"
   }
 });
+
+export default withFirebaseHOC(Login);
