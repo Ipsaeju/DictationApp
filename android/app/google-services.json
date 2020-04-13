@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "936170643479",
+    "firebase_url": "https://md-scribe.firebaseio.com",
+    "project_id": "md-scribe",
+    "storage_bucket": "md-scribe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:936170643479:android:97857e0c45097d09ca7c52",
+        "android_client_info": {
+          "package_name": "com.mdsolutions.mdscribe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "936170643479-9m4hdncaf6v8qe7g3e4tb963agthvmr2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXR9hLE3-VBY0Dcr6p5-DuBP6kXXMG-K0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "936170643479-9m4hdncaf6v8qe7g3e4tb963agthvmr2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "936170643479-pnas57h4751j9oubbva5pakck722dfgp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mdsolutions.mdscribe"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

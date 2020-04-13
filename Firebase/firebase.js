@@ -20,6 +20,9 @@ const Firebase = {
     },
     newUserAdd: (userInfo) => {
         return firebase.firestore().collection("Users").doc(`${userInfo.uid}`).set(userInfo);
+    },
+    checkUserAuth: user => {
+        return firebase.auth().onAuthStateChanged(user);
     }
 }
 
