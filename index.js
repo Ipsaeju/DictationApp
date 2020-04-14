@@ -1,21 +1,9 @@
-import { AppRegistry } from 'react-native';
-import { Component } from 'react';
-import Login from './Components/login'
-import Dashboard from './Components/dashboard'
+import { createAppContainer, createSwitchNavigator } from "@react-navigation/native";
+import Appnav from "./Components/appnav";
 
-class DictationApp extends Component{
-    state = {
-        isLoggedin: false
-    }
+const SwitchNav = createSwitchNavigator({
+    App: Appnav
+});
 
-    render(){
-        if(this.state.isLoggedin){
-            return <Dashboard onLogoutPress={() => this.setState({isLoggedin: false})}/>;
-        }
-        else{
-            return <Login onLoginPress={() => this.setState({isLoggedin: true})}/>;
-        }
-    }
-}
-
-AppRegistry.registerComponent('startingPoint', () => DictationApp);
+const AppContainer = createAppContainer(SwitchNav);
+export default AppContainer;

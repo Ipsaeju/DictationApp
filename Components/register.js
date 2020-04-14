@@ -6,7 +6,6 @@ import {
   TextInput,
   TouchableOpacity
 } from "react-native";
-import auth from "@react-native-firebase/auth";
 import { withFirebaseHOC } from '../Firebase/firebase';
 
 class Register extends React.Component {
@@ -91,7 +90,7 @@ class Register extends React.Component {
         <Text style={styles.helperText}>Already have an account?</Text>
         <TouchableOpacity
           style={styles.registerBtn}
-          onPress={() => this.props.navigation.navigate("Login")}
+          onPress={() => this.props.navigation.goBack()}
         >
           <Text style={styles.btnText}>RETURN TO LOGIN</Text>
         </TouchableOpacity>

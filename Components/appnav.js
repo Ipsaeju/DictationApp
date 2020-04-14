@@ -1,4 +1,4 @@
-import { createStackNavigator } from "react-navigation";
+import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./login";
 import Register from "./register";
 import ForgotPass from "./forgotpass";

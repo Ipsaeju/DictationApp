@@ -1,7 +1,7 @@
 import "@react-native-firebase/auth";
-import "@react-native-firebase"
 import * as firebase from "firebase";
-import firebaseConfig from "./firebaseconfig"
+import firebaseConfig from "./firebaseconfig";
+import "@react-native-firebase/app";
 
 firebase.initializeApp(firebaseConfig);
 

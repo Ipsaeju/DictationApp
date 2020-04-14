@@ -24,6 +24,7 @@ class ForgotPass extends React.Component {
       this.props.navigation.navigate("Login");
     }catch(error){
       alert("There was an error in sending the password reset code. Please try again or contact a system admin");
+      console.log(error);
     }
   }
 
@@ -48,9 +49,9 @@ class ForgotPass extends React.Component {
         <Text style={styles.helperText}>Don't need to reset password?</Text>
         <TouchableOpacity
           style={styles.btns}
-          onPress={() => this.props.navigation.navigate("Login")}
+          onPress={() => this.props.navigation.goBack()}
         >
-          <Text style={styles.btnText}>RETURN TO LOGIN</Text>
+          <Text style={styles.btnText}>GO BACK</Text>
         </TouchableOpacity>
       </View>
     );
