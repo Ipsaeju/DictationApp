@@ -1,4 +1,4 @@
-package com.dictationapp;
+package com.mdsolutions.mdscribe;
 
 import android.app.Application;
 import android.content.Context;
