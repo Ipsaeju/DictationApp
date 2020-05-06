@@ -1,11 +1,14 @@
 import React from "react";
-import AppNav from "./appnav";
-import Firebase, { FirebaseProvider } from "../Firebase/firebase";
+import StackNav from "./appnav";
+import { NavigationContainer } from "@react-navigation/native";
+import Firebase, { FirebaseProvider } from "../Firebase";
 
 export default function App() {
   return (
     <FirebaseProvider value={Firebase}>
-      <AppNav />
+      <NavigationContainer>
+        <StackNav />
+      </NavigationContainer>
     </FirebaseProvider>
   );
 }

@@ -1,12 +1,6 @@
 import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity
-} from "react-native";
-import { withFirebaseHOC } from '../Firebase/firebase';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ScrollView } from "react-native";
+import { withFirebaseHOC } from '../Firebase';
 
 class Login extends React.Component {
   state = {
@@ -34,53 +28,55 @@ class Login extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.logo}>MD Scribe</Text>
-        {!!this.state.message && (
-					<Text style={styles.warningText}>
-						{this.state.message}
-					</Text>
-				)}
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.inputText}
-            placeholder="Email"
-            placeholderTextColor="#003f5c"
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={text => this.setState({ email: text })}
-          />
-        </View>
-        <View style={styles.inputView}>
-          <TextInput
-            secureTextEntry
-            style={styles.inputText}
-            placeholder="Password"
-            placeholderTextColor="#003f5c"
-            autoCapitalize="none"
-            autoCorrect={false}
-            onChangeText={text => this.setState({ password: text })}
-          />
-        </View>
-        <TouchableOpacity>
-          <Text
-            style={styles.helperText}
-            onPress={() => this.props.navigation.navigate("ForgotPass")}
+      <ScrollView>
+        <View style={styles.container}>
+          <Image source={require("../Assets/MDSolutionsLogo.png")}/>
+          <Text style={styles.logo}>m⁺ Scribe</Text>
+          {!!this.state.message && (
+            <Text style={styles.warningText}>
+              {this.state.message}
+            </Text>
+          )}
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.inputText}
+              placeholder="Email"
+              placeholderTextColor="#c7f1ff"
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={text => this.setState({ email: text })}
+            />
+          </View>
+          <View style={styles.inputView}>
+            <TextInput
+              secureTextEntry
+              style={styles.inputText}
+              placeholder="Password"
+              placeholderTextColor="#c7f1ff"
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={text => this.setState({ password: text })}
+            />
+          </View>
+          <TouchableOpacity>
+            <Text
+              style={styles.helperText}
+              onPress={() => this.props.navigation.navigate("Forgot Password")}>
+              Forgot Password
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.loginBtn} disabled={!this.state.email||!this.state.password}
+          onPress={this._userLogin}>
+            <Text style={styles.btnText}>LOGIN</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.loginBtn}
+            onPress={() => this.props.navigation.navigate("Register")}
           >
-            Reset Password
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.loginBtn} disabled={!this.state.email||!this.state.password}
-        onPress={this._userLogin}>
-          <Text style={styles.btnText}>LOGIN</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.loginBtn}
-          onPress={() => this.props.navigation.navigate("Register")}
-        >
-          <Text style={styles.btnText}>REGISTER</Text>
-        </TouchableOpacity>
-      </View>
+            <Text style={styles.btnText}>REGISTER</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     );
   }
 }
@@ -88,22 +84,26 @@ class Login extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#003f5c",
+    backgroundColor: "#8cc6ff",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    paddingTop: 10
   },
   logo: {
-    fontWeight: "bold",
+    fontWeight: "300",
     fontSize: 50,
-    color: "#fb5b5a",
-    marginBottom: 40
+    fontFamily: "Roboto",
+    color: "#0266e0",
+    marginTop: 20,
+    marginBottom: 20
   },
   inputView: {
     width: "80%",
-    backgroundColor: "#465881",
+    backgroundColor: "#7596a1",
     borderRadius: 25,
     height: 50,
-    marginBottom: 20,
+    marginBottom: 8,
+    marginTop: 12,
     justifyContent: "center",
     padding: 20
   },
@@ -112,23 +112,24 @@ const styles = StyleSheet.create({
     color: "white"
   },
   helperText: {
-    marginTop: 20,
+    marginTop: 4,
+    marginBottom: 18,
     color: "white",
-    fontSize: 12
+    fontSize: 16
   },
   warningText: {
-    color: "Red",
-    fontSize: 12,
+    color: "red",
+    fontSize: 20,
     padding: 5
   },
   loginBtn: {
     width: "80%",
-    backgroundColor: "#fb5b5a",
+    backgroundColor: "#1754e3",
     borderRadius: 25,
     height: 50,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 40,
+    marginTop: 10,
     marginBottom: 10
   },
   btnText: {

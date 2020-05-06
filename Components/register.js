@@ -4,21 +4,21 @@ import {
   Text,
   View,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  ScrollView
 } from "react-native";
-import { withFirebaseHOC } from '../Firebase/firebase';
+import { withFirebaseHOC } from '../Firebase';
 
 class Register extends React.Component {
   state = {
     email: "",
     password: "",
     confirmPass: "",
-    message: "",
-    canRegister: false
+    message: ""
   };
 
   _createAccount = async () => {
-    this.setState({message: "", canRegister: false});
+    this.setState({message: ""});
 
     var params = {
       email: this.state.email,
@@ -26,24 +26,20 @@ class Register extends React.Component {
       confirmPass: this.state.confirmPass
     };
 
-    if(params.password !== params.confirmPass) this.setState({message: "The password does not match", 
-    canRegister: false});
-    else this.setState({canRegister: true});
+    if(params.password !== params.confirmPass) this.setState({message: "The password does not match"});
 
-    if(canRegister){
-      try{
-        const response = await this.props.firebase.register(params.email, params.password);
-        if(response.user.uid){
-          const { uid } = response.user;
-          const userInfo = { email, password, uid };
-          await this.props.firebase.newUserAdd(userInfo);
-          this.props.navigation.navigate("Login");
-        }
-      }catch(error){
-        if(error.code === 'auth/email-already-in-use') 
-        this.setState({message: "This email is already in use!"});
-        if(error.code === 'auth/invalid-email') this.setState({message: "This email is invalid!"});
+    try{
+      const response = await this.props.firebase.register(params.email, params.password);
+      if(response.user.uid){
+        const { uid } = response.user;
+        const userInfo = { email, password, uid };
+        await this.props.firebase.newUserAdd(userInfo);
+        this.props.navigation.navigate("Login");
       }
+    }catch(error){
+      if(error.code === 'auth/email-already-in-use') 
+      this.setState({message: "This email is already in use!"});
+      if(error.code === 'auth/invalid-email') this.setState({message: "This email is invalid!"});
     }
 
   }
@@ -52,15 +48,15 @@ class Register extends React.Component {
     return (
       <View style={styles.container}>
         {!!this.state.message && (
-					<Text style={styles.warningText}>
-						{this.state.message}
-					</Text>
-				)}
+          <Text style={styles.warningText}>
+            {this.state.message}
+          </Text>
+        )}
         <View style={styles.inputView}>
           <TextInput
             style={styles.inputText}
             placeholder="Email"
-            placeholderTextColor="#003f5c"
+            placeholderTextColor="#c7f1ff"
             onChangeText={text => this.setState({ email: text })}
           />
         </View>
@@ -69,7 +65,7 @@ class Register extends React.Component {
             secureTextEntry
             style={styles.inputText}
             placeholder="Password"
-            placeholderTextColor="#003f5c"
+            placeholderTextColor="#c7f1ff"
             onChangeText={text => this.setState({ password: text })}
           />
         </View>
@@ -78,7 +74,7 @@ class Register extends React.Component {
             secureTextEntry
             style={styles.inputText}
             placeholder="Re-enter Password"
-            placeholderTextColor="#003f5c"
+            placeholderTextColor="#c7f1ff"
             onChangeText={text => this.setState({ confirmPass: text })}
           />
         </View>
@@ -102,16 +98,17 @@ class Register extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#003f5c",
+    backgroundColor: "#8cc6ff",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    paddingTop: 20
   },
   inputView: {
     width: "80%",
-    backgroundColor: "#465881",
+    backgroundColor: "#7596a1",
     borderRadius: 25,
     height: 50,
-    marginBottom: 20,
+    marginBottom: 18,
     justifyContent: "center",
     padding: 20
   },
@@ -120,24 +117,25 @@ const styles = StyleSheet.create({
     color: "white"
   },
   helperText: {
-    marginTop: 20,
+    marginTop: 18,
+    marginBottom: 4,
     color: "white",
-    fontSize: 12
+    fontSize: 16
   },
   warningText: {
-    color: "Red",
-    fontSize: 12,
+    color: "red",
+    fontSize: 28,
     padding: 5
   },
   registerBtn: {
     width: "80%",
-    backgroundColor: "#fb5b5a",
+    backgroundColor: "#1754e3",
     borderRadius: 25,
     height: 50,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 40,
-    marginBottom: 10
+    marginTop: 10,
+    marginBottom: 5
   },
   btnText: {
     color: "white"

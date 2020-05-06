@@ -1,9 +1,8 @@
-import React, { Component } from "react";
-import { AppLoading } from "expo";
-import { Asset } from "expo-asset";
-import { withFirebaseHOC } from "../Firebase/firebase";
+import React from "react";
+import { View, StyleSheet, ActivityIndicator, Text } from "react-native";
+import { withFirebaseHOC } from "../Firebase";
 
-class Preload extends Component {
+class Preload extends React.Component {
     state = {
         isLoadingComplete: false
     };
@@ -11,39 +10,50 @@ class Preload extends Component {
     componentDidMount = async () => {
         try{
             await this.props.firebase.checkUserAuth(user => {
-                if(user) this.props.navigation.navigate("Dashboard");
-                else this.props.navigation.navigate("Login");
+                this.props.navigation.navigate(user ? "Dashboard" : "Login");
             });
         }catch(error){
             console.log(error);
         }
     }
-    
-    loadGfx = async () => {
-        return await Promise.all([
-            Asset.loadAsync([
-             require('../Assets/Punchy.png')
-            ])
-        ]);
-    }
-
-    loadErrorLogger = error => {
-        console.log(error);
-    }
-
-    loadCompleteFlag = () => {
-        this.setState({ isLoadingComplete: true });
-    }
 
     render(){
         return(
-            <AppLoading
-                startAsync={this.loadGfx}
-                onFinish={this.loadCompleteFlag}
-                onError={this.loadErrorLogger}
-            />
+            <View style={styles.container}>
+                <View style={styles.companyContainer}>
+                    <Text style={styles.companyBold}>md</Text>
+                    <Text style={styles.companyFine}>Solutions</Text>
+                    <Text style={styles.companyBold}>⁺</Text>
+                </View>
+                <ActivityIndicator size="large" color="white"/>
+            </View>
         );
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#0d73de",
+        flex: 1
+    },
+    companyContainer: {
+        flexDirection: "row",
+        marginBottom: 22
+    },
+    companyBold: {
+        color: "white",
+        fontWeight: "bold",
+        fontSize: 46,
+        fontFamily: "roboto"
+    },
+    companyFine: {
+        color: "#54eeff",
+        fontSize: 46,
+        fontFamily: "roboto",
+        fontWeight: "300"
+    }
+});
 
 export default withFirebaseHOC(Preload);

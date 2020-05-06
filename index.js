@@ -1,9 +1,4 @@
-import { createAppContainer, createSwitchNavigator } from "@react-navigation/native";
-import Appnav from "./Components/appnav";
+import { AppRegistry } from "react-native";
+import App from "./Components/app";
 
-const SwitchNav = createSwitchNavigator({
-    App: Appnav
-});
-
-const AppContainer = createAppContainer(SwitchNav);
-export default AppContainer;
+AppRegistry.registerComponent("DictationApp", () => App);
