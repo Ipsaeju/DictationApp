@@ -6,7 +6,7 @@ import {
   TextInput,
   TouchableOpacity
 } from "react-native";
-import { withFirebaseHOC } from '../Firebase/firebase';
+import { withFirebaseHOC } from '../Firebase';
 
 class ForgotPass extends React.Component {
   state = {
@@ -24,21 +24,24 @@ class ForgotPass extends React.Component {
       this.props.navigation.navigate("Login");
     }catch(error){
       alert("There was an error in sending the password reset code. Please try again or contact a system admin");
+      console.log(error);
     }
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.helperText}>
-          Enter the Email you registered with and a reset code will be sent to
-          your email
+        <Text style={styles.instructionsText}>
+          Enter the email you registered with and
+        </Text>
+        <Text style={styles.instructionsText}>
+          a reset code will be sent to that email
         </Text>
         <View style={styles.inputView}>
           <TextInput
             style={styles.inputText}
-            placeholder="Email"
-            placeholderTextColor="#003f5c"
+            placeholder="Email Address"
+            placeholderTextColor="#c7f1ff"
             onChangeText={text => this.setState({ email: text })}
           />
         </View>
@@ -48,9 +51,9 @@ class ForgotPass extends React.Component {
         <Text style={styles.helperText}>Don't need to reset password?</Text>
         <TouchableOpacity
           style={styles.btns}
-          onPress={() => this.props.navigation.navigate("Login")}
+          onPress={() => this.props.navigation.goBack()}
         >
-          <Text style={styles.btnText}>RETURN TO LOGIN</Text>
+          <Text style={styles.btnText}>GO BACK</Text>
         </TouchableOpacity>
       </View>
     );
@@ -60,7 +63,7 @@ class ForgotPass extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#003f5c",
+    backgroundColor: "#8cc6ff",
     alignItems: "center",
     justifyContent: "center"
   },
@@ -72,10 +75,11 @@ const styles = StyleSheet.create({
   },
   inputView: {
     width: "80%",
-    backgroundColor: "#465881",
+    backgroundColor: "#7596a1",
     borderRadius: 25,
     height: 50,
     marginBottom: 20,
+    marginTop: 10,
     justifyContent: "center",
     padding: 20
   },
@@ -84,18 +88,29 @@ const styles = StyleSheet.create({
     color: "white"
   },
   helperText: {
-    marginTop: 20,
+    marginTop: 18,
+    marginBottom: 4,
     color: "white",
-    fontSize: 12
+    fontSize: 16
+  },
+  instructionsText: {
+    marginBottom: 4,
+    color: "white",
+    fontSize: 16
+  },
+  warningText: {
+    color: "red",
+    fontSize: 28,
+    padding: 5
   },
   btns: {
     width: "80%",
-    backgroundColor: "#fb5b5a",
+    backgroundColor: "#1754e3",
     borderRadius: 25,
     height: 50,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 40,
+    marginTop: 10,
     marginBottom: 10
   },
   btnText: {

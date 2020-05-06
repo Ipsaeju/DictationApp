@@ -1,4 +1,4 @@
-package com.dictationapp;
+package com.mdsolutions.mdscribe;
 
 import com.facebook.react.ReactActivity;
 
