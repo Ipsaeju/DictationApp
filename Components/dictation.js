@@ -6,42 +6,30 @@ import {
   Button
 } from 'react-native';
 
-import AudioRecorderPlayer from "react-native-audio-recorder-player";
+import Recorder from "./recorder"
 
 class Dictation extends React.Component {
 
-    recorder = new AudioRecorderPlayer();
-
     state = {
-        recordSeconds: 0.0,
-        recordTime: "00:00:00",
-        name: "",
-        currentPositionSec: 0,
-        currentDurationSec: 0,
-        playTime: "00:00:00",
-        duration: "00:00:00",
+        dictationName: "",
+        dictationUri: "",
+        message: ""
     };
 
-    _onStartRecorder = async () => {
-        const result = await this.recorder.startRecorder();
-        this.recorder.addRecordBackListener((e) => {
-            this.setState({
-                recordSeconds: e.current_position,
-                recordTime: this.recorder.mmssss(Math.floor(e.current_position))
-            });
-        });
-        console.log(result);
+    _onSave = async () => {
+        this.setState({message: ""});
+
+        var params = {
+            dictationName: this.state.dictationName,
+            dictationUri: this.state.dictationUri
+        };
+
+        try{
+            await this.props.firebase.setDictation(params.dictationName, params.dictationUri);
+            this.props.navigation.navigate("Dashboard");
+
+        }catch(error){
+            console.log(error);
+        }
     }
-
-    _onStopRecord = async () => {
-        const result = await this.recorder.stopRecorder();
-        this.recorder.removeRecordBackListener();
-        this.setState({
-          recordSeconds: 0
-        });
-        console.log(result);
-    }
-
-    
-
 }
