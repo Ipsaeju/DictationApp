@@ -3,10 +3,12 @@ import * as firebase from "firebase";
 import firebaseConfig from "./firebaseconfig";
 import "@react-native-firebase/app";
 import UUIDGenerator from 'react-native-uuid-generator';
+import "@react-native-firebase/storage"
 
 firebase.initializeApp(firebaseConfig);
 
 const Firebase = {
+    dUid,
     login: (email, password) => {
         return firebase.auth().signInWithEmailAndPassword(email, password);
     },
@@ -25,20 +27,24 @@ const Firebase = {
     checkUserAuth: (user) => {
         return firebase.auth().onAuthStateChanged(user);
     },
-    getCurrUser: () => {
+    getCurrUserEmail: () => {
         return firebase.auth().currentUser.email;
     },
     getCurrUserId: () => {
         return firebase.auth().currentUser.uid;
     },
-    setDictation: (dName, dUri) => {
-        return firebase.firestore().collection("Dictations").doc(`${Firebase.getCurrUserId}`).set({
-            dictationName: dName,
-            dictationUid: UUIDGenerator.getRandomUUID(),
-            dictationUri: dUri,
-            recorderName: Firebase.getCurrUser()
-        });
+    createDictationUid: () => {
+        dUid = UUIDGenerator.getRandomUUID();
+    },
+    uploadToReference: (file, metadata) => {
+        Firebase.createDictationUid();
+        return firebase.storage().ref("Dictations/" + `${Firebase.getCurrUserId}` + "/UserDictations/" + dUid).put(file, metadata);
+    },
+    getAudioReference: (file) => {
+        return firebase.storage().ref("Dictations/" + `${Firebase.getCurrUserId}` + "/UserDictations/" + dUid + "/" + file).fullPath;
     }
+    
+
 }
 
 export default Firebase;

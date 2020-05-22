@@ -6,14 +6,20 @@ import {
   Button
 } from 'react-native';
 
-import Recorder from "./recorder"
+import recorder from "./recorder"
 
 class Dictation extends React.Component {
 
     state = {
         dictationName: "",
         dictationUri: "",
-        message: ""
+        message: "",
+        recordSeconds: recorder.state.recordSeconds,
+        recordTime: recorder.state.recordTime,
+        currentPositionSec: recorder.state.currentPositionSec,
+        currentDurationSec: recorder.state.currentDurationSec,
+        playTime: recorder.state.playTime,
+        duration: recorder.state.playTime,
     };
 
     _onSave = async () => {
@@ -32,4 +38,16 @@ class Dictation extends React.Component {
             console.log(error);
         }
     }
+    
+    _onStartRecording = () => recorder._onStartRecorder();
+    _onStopRecording = () => recorder._onStopRecorder();
+    _onPlayPlayback = () => recorder._onStartPlay();
+    _onPausePlayback = () => recorder._onPausePlay();
+    _onStopPlayback = () => recorder._onStopPlay();
+
+
+
+    
+
+
 }
