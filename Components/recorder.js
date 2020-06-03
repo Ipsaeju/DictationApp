@@ -145,13 +145,13 @@ class Recorder extends React.Component{
   _onDelete = async () => {
     response = Warnings._onDeleteDictation();
     if(response){
-      this._clearTimer();
       deleteResp = Firebase.deleteDictation(this.state.audioFile).then(function() {
         this.setState({
           message: "Dictation deleted successfully",
           audioFile: null,
           recordingPath: null
         });
+        this._clearTimer();
       }).catch(function(error) {
         if(error.code === "storage/object-not-found"){
           this.setState({message: "Dictation was not found or already deleted. Returning you back to dashboard"});

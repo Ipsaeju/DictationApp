@@ -20,6 +20,9 @@ class Dashboard extends React.Component {
         <TouchableOpacity style={styles.btn} onPress={this._userLogout}>
           <Text style={styles.btnText}>LOGOUT</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.btn} onPress={this.props.navigation.navigate("Recorder")}>
+          <Text style={styles.btnText}>Make Dictation</Text>
+        </TouchableOpacity>
       </View>
     
     );
