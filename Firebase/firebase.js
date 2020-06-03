@@ -35,13 +35,17 @@ const Firebase = {
     },
     createDictationUid: () => {
         dUid = UUIDGenerator.getRandomUUID();
+        return firebase.storage().ref().child(`${Firebase.getCurrUserId}` + "/" + dUid);
     },
     uploadToReference: (file, metadata) => {
-        Firebase.createDictationUid();
-        return firebase.storage().ref("Dictations/" + `${Firebase.getCurrUserId}` + "/UserDictations/" + dUid).put(file, metadata);
+        dictationRef = Firebase.createDictationUid();
+        return dictationRef.put(file, metadata);
     },
     getAudioReference: (file) => {
-        return firebase.storage().ref("Dictations/" + `${Firebase.getCurrUserId}` + "/UserDictations/" + dUid + "/" + file).fullPath;
+        return firebase.storage().ref(`${Firebase.getCurrUserId}` + "/" + dUid + "/" + file).fullPath;
+    },
+    deleteDictation: (file) => {
+        return firebase.storage().ref(`${Firebase.getCurrUserId}` + "/" + dUid + "/" + file).delete();
     }
     
 
