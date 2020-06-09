@@ -4,6 +4,14 @@ import { withFirebaseHOC } from '../Firebase';
 
 class Dashboard extends React.Component {
 
+  state = {
+    dictationList: [],
+    user: "",
+    message: ""
+  };
+
+  
+
   _userLogout = async () => {
     try{
       await this.props.firebase.logout();
@@ -12,6 +20,8 @@ class Dashboard extends React.Component {
     }
 
   }
+
+
 
   render() {
     return (

@@ -35,17 +35,44 @@ const Firebase = {
     },
     createDictationUid: () => {
         dUid = UUIDGenerator.getRandomUUID();
-        return firebase.storage().ref().child(`${Firebase.getCurrUserId}` + "/" + dUid);
+        return firebase.storage().ref().child(`${Firebase.getCurrUserId}` + "/" + dUid + "_");
     },
     uploadToReference: (file, metadata) => {
         dictationRef = Firebase.createDictationUid();
         return dictationRef.put(file, metadata);
     },
     getAudioReference: (file) => {
-        return firebase.storage().ref(`${Firebase.getCurrUserId}` + "/" + dUid + "/" + file).fullPath;
+        return firebase.storage().ref(`${Firebase.getCurrUserId}` + "/" + dUid + "_" + file).fullPath;
     },
     deleteDictation: (file) => {
-        return firebase.storage().ref(`${Firebase.getCurrUserId}` + "/" + dUid + "/" + file).delete();
+        return firebase.storage().ref(`${Firebase.getCurrUserId}` + "/" + dUid + "_" + file).delete();
+    },
+    getUserDictations: () => {
+        return firebase.storage().ref().child(`${Firebase.getCurrUserId}` + "/").listAll();
+    },
+    getDictationInfo: (fileRef) => {
+        dictationName = "";
+        dictationDuration = "";
+        dictationPath = fileRef.fullPath;
+        fileRef.getMetadata().then(function(metadata) {
+            fileName = metadata.name;
+            fileDuration = metadata.duration;
+        }).catch(function(error) {
+            return error;
+        });
+        return {
+            dictationName,
+            dictationDuration,
+            dictationPath
+        };
+    },
+    getDictationListInfo: (list) => {
+        dictationsMetadata = [];
+        for (dictation of list) {
+            dictationMetadata = Firebase.getDictationInfo(dictation);
+            dictationsMetadata.push();
+        }
+        return dictationsMetadata;
     }
     
 
