@@ -4,6 +4,14 @@ import { withFirebaseHOC } from '../Firebase';
 
 class Dashboard extends React.Component {
 
+  state = {
+    dictationList: [],
+    user: "",
+    message: ""
+  };
+
+  
+
   _userLogout = async () => {
     try{
       await this.props.firebase.logout();
@@ -13,12 +21,17 @@ class Dashboard extends React.Component {
 
   }
 
+
+
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.helperText}>You made it here</Text>
         <TouchableOpacity style={styles.btn} onPress={this._userLogout}>
           <Text style={styles.btnText}>LOGOUT</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.btn} onPress={this.props.navigation.navigate("Recorder")}>
+          <Text style={styles.btnText}>Make Dictation</Text>
         </TouchableOpacity>
       </View>
     
