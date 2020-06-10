@@ -1,7 +1,12 @@
 import { FlatList, StyleSheet, Text, View, TouchableOpacity, ScrollView } from "react-native";
 import { List, ListItem } from "react-native-elements"
+import ErrorMsgHandler from "./Alerts/errors";
 
 class DictationsList extends React.Component {
+
+    constructor(errorMsgHandler = new ErrorMsgHandler()) {
+        this.errMsgHandler = errorMsgHandler;
+    }
 
     state = {
         dictationList: [],
@@ -15,7 +20,7 @@ class DictationsList extends React.Component {
             if(response == null) this.setState({message: "You have no dictations to view or send. Make one!"});
             else return response;
         }catch(error) {
-
+            this.setState({message: this.errMsgHandler.handleStoreErrMsg(error)});
         }
     }
 
@@ -27,16 +32,8 @@ class DictationsList extends React.Component {
                 this.setState({dictationList: response})
             }
         }catch(error) {
-    
+            this.setState({message: this.errMsgHandler.handleStoreErrMsg(error)});
         }
-    }
-
-    _getDictationName = async (dictation) => {
-        return dictation.dictationName;
-    }
-
-    _getDictationDuration = async (dictation) => {
-        return dictation.dictationDuration;
     }
 
     _getDictationPath = async (dictation) => {
@@ -48,6 +45,11 @@ class DictationsList extends React.Component {
         return (
             <ScrollView>
                 <View style={styles.container}>
+                    {!!this.state.message && (
+                        <Text style={styles.helperText}>
+                            {this.state.message}
+                        </Text>
+                    )}
                     <List>
                         <FlatList data={this.state.dictationList} renderItem={({ item }) => (
                             <ListItem
@@ -55,7 +57,7 @@ class DictationsList extends React.Component {
                                 subtitle={`${item.dictationDuration}`}
                                 bottomDivider
                                 chevron
-                                onPress={() => this.props.navigation.navigate("Viewer", {path: item.dictationPath})}
+                                //onPress={() => this.props.navigation.navigate("Viewer", {path: item.dictationPath})}
                              />
                             )}
                             keyExtractor={item => item.dictationPath}
@@ -70,31 +72,20 @@ class DictationsList extends React.Component {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: "#003f5c",
+      backgroundColor: "white",
       alignItems: "center",
       justifyContent: "center"
     },
     helperText: {
       marginTop: 20,
-      color: "white",
+      color: "#777777",
       fontSize: 12
     },
     warningText: {
       color: "red",
       fontSize: 12,
       padding: 5
-    },
-    btn: {
-      width: "80%",
-      backgroundColor: "#fb5b5a",
-      borderRadius: 25,
-      height: 50,
-      alignItems: "center",
-      justifyContent: "center",
-      marginTop: 40,
-      marginBottom: 10
-    },
-    btnText: {
-      color: "white"
     }
   });
+
+  export default DictationsList;

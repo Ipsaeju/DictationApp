@@ -1,32 +1,35 @@
 import React from "react";
 import { Text, TouchableOpacity, StyleSheet, View } from "react-native";
 import { withFirebaseHOC } from '../Firebase';
+import DictationsList from "./dictationslist";
+import ErrorMsgHandler from "./Alerts/errors";
 
 class Dashboard extends React.Component {
 
   state = {
-    dictationList: [],
     user: "",
     message: ""
   };
 
+  constructor(dictationList = new DictationsList(), errorMsgHandler = new ErrorMsgHandler()){
+    this.dictationList = dictationList;
+    this.errorMsgHandler = errorMsgHandler;
+    this.dictationList._listDictations();
+  }
   
-
   _userLogout = async () => {
     try{
       await this.props.firebase.logout();
     }catch(error) {
+      this.setState({message: this.errorMsgHandler.handleAuthErrMsg(error)});
       console.log(error);
     }
-
   }
-
-
 
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.helperText}>You made it here</Text>
+        <DictationsList/>
         <TouchableOpacity style={styles.btn} onPress={this._userLogout}>
           <Text style={styles.btnText}>LOGOUT</Text>
         </TouchableOpacity>
@@ -42,13 +45,13 @@ class Dashboard extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#003f5c",
+    backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center"
   },
   helperText: {
     marginTop: 20,
-    color: "white",
+    color: "#777777",
     fontSize: 12
   },
   warningText: {
