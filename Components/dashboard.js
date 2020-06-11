@@ -7,7 +7,7 @@ import ErrorMsgHandler from "./Alerts/errors";
 class Dashboard extends React.Component {
 
   state = {
-    user: "",
+    user: this.props.firebase.getCurrUserEmail(),
     message: ""
   };
 
@@ -21,7 +21,7 @@ class Dashboard extends React.Component {
     try{
       await this.props.firebase.logout();
     }catch(error) {
-      this.setState({message: this.errorMsgHandler.handleAuthErrMsg(error)});
+      this.setState({message: this.errorMsgHandler.handleAuthErrMsg(error.code)});
       console.log(error);
     }
   }

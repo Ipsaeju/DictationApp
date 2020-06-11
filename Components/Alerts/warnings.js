@@ -23,6 +23,10 @@ const Warnings = {
         ],
         {cancelable: false});
         return resp;
+    },
+    _onSuccessfulReset: () => {
+        Alert.alert("Success",
+        "Password reset email has been sent. Please check your email as soon as possible to reset your password.");
     }   
 
 }

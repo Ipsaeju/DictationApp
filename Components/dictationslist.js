@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text, View, TouchableOpacity, ScrollView } from "react-native";
+import { FlatList, StyleSheet, Text, View, ScrollView } from "react-native";
 import { List, ListItem } from "react-native-elements"
 import ErrorMsgHandler from "./Alerts/errors";
 
@@ -20,7 +20,7 @@ class DictationsList extends React.Component {
             if(response == null) this.setState({message: "You have no dictations to view or send. Make one!"});
             else return response;
         }catch(error) {
-            this.setState({message: this.errMsgHandler.handleStoreErrMsg(error)});
+            this.setState({message: this.errMsgHandler.handleStoreErrMsg(error.code)});
         }
     }
 
@@ -32,7 +32,7 @@ class DictationsList extends React.Component {
                 this.setState({dictationList: response})
             }
         }catch(error) {
-            this.setState({message: this.errMsgHandler.handleStoreErrMsg(error)});
+            this.setState({message: this.errMsgHandler.handleStoreErrMsg(error.code)});
         }
     }
 

@@ -1,5 +1,4 @@
 import { RNVoiceRecorder } from "react-native-voice-recorder";
-import Firebase from "../Firebase";
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ImageBackground} from "react-native";
 import Warnings from "./Alerts/warnings";
 import { withFirebaseHOC } from '../Firebase';
@@ -87,11 +86,11 @@ class Recorder extends React.Component{
   _onSave = async () => {
     metadata = {
       name: this.state.dictationName,
-      recorder: Firebase.getCurrUserEmail(),
+      recorder: this.props.firebase.getCurrUserEmail(),
       duration: this.state.duration,
       contentType: "audio/wav"
     };
-    uploadTask = Firebase.uploadToReference(this.state.audioFile, metadata);
+    uploadTask = this.props.firebase.uploadToReference(this.state.audioFile, metadata);
     uploadTask.on("state_changed", function(snapshot){
       progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
       this.setState({uploadProgress: progress});
@@ -106,7 +105,7 @@ class Recorder extends React.Component{
     function() {
       this.setState({
         message: "Upload success",
-        recordingPath: Firebase.getAudioReference(this.state.audioFile),
+        recordingPath: this.props.firebase.getAudioReference(this.state.audioFile),
         isRecording: false,
         isDoneRecording: false
       });
@@ -145,7 +144,7 @@ class Recorder extends React.Component{
   _onDelete = async () => {
     response = Warnings._onDeleteDictation();
     if(response){
-      deleteResp = Firebase.deleteDictation(this.state.audioFile).then(function() {
+      deleteResp = this.props.firebase.deleteDictation(this.state.audioFile).then(function() {
         this.setState({
           message: "Dictation deleted successfully",
           audioFile: null,
