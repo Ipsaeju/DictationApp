@@ -6,9 +6,8 @@ import UUIDGenerator from 'react-native-uuid-generator';
 import "@react-native-firebase/storage"
 
 firebase.initializeApp(firebaseConfig);
-
+dUid = "";
 const Firebase = {
-    dUid,
     login: (email, password) => {
         return firebase.auth().signInWithEmailAndPassword(email, password);
     },

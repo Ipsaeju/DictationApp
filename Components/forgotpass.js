@@ -32,8 +32,8 @@ class ForgotPass extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <ImageBackground source={require("../Assets/MedicalBackground.png")}>
+      <View>
+        <ImageBackground source={require("../Assets/MedicalBackground.png")} style={styles.container}>
           <Text style={styles.instructionsText}>
             Enter the email you registered with and
           </Text>

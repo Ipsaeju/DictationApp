@@ -1,3 +1,4 @@
+import React from "react";
 import { FlatList, StyleSheet, Text, View, ScrollView } from "react-native";
 import { List, ListItem } from "react-native-elements"
 import ErrorMsgHandler from "./Alerts/errors";

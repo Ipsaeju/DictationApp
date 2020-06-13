@@ -29,8 +29,8 @@ class Login extends React.Component {
   render() {
     return (
       <ScrollView>
-        <View style={styles.container}>
-          <ImageBackground source={require("../Assets/MedicalBackground.png")}>
+        <View>
+          <ImageBackground source={require("../Assets/MedicalBackground.png")} style={styles.container}>
             <Image source={require("../Assets/MDSolutionsLogo.png")}/>
             <Text style={styles.logo}>m⁺ Scribe</Text>
             {!!this.state.message && (
@@ -86,7 +86,6 @@ class Login extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#8cc6ff",
     alignItems: "center",
     justifyContent: "center",
     paddingTop: 10

@@ -11,11 +11,11 @@ class Dashboard extends React.Component {
     message: ""
   };
 
-  constructor(dictationList = new DictationsList(), errorMsgHandler = new ErrorMsgHandler()){
-    this.dictationList = dictationList;
-    this.errorMsgHandler = errorMsgHandler;
-    this.dictationList._listDictations();
-  }
+  // constructor(dictationList = new DictationsList(), errorMsgHandler = new ErrorMsgHandler()){
+  //   this.dictationList = dictationList;
+  //   this.errorMsgHandler = errorMsgHandler;
+  //   this.dictationList._listDictations();
+  // }
   
   _userLogout = async () => {
     try{
@@ -29,7 +29,6 @@ class Dashboard extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <DictationsList/>
         <TouchableOpacity style={styles.btn} onPress={this._userLogout}>
           <Text style={styles.btnText}>LOGOUT</Text>
         </TouchableOpacity>
