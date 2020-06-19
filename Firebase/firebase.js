@@ -3,7 +3,8 @@ import * as firebase from "firebase";
 import firebaseConfig from "./firebaseconfig";
 import "@react-native-firebase/app";
 import UUIDGenerator from 'react-native-uuid-generator';
-import "@react-native-firebase/storage"
+import "@react-native-firebase/storage";
+
 
 firebase.initializeApp(firebaseConfig);
 dUid = "";
@@ -32,19 +33,18 @@ const Firebase = {
     getCurrUserId: () => {
         return firebase.auth().currentUser.uid;
     },
-    createDictationUid: () => {
-        dUid = UUIDGenerator.getRandomUUID();
-        return firebase.storage().ref().child(`${Firebase.getCurrUserId}` + "/" + dUid + "_");
+    getStorageRef: () => {
+        return firebase.storage().ref().child(`${Firebase.getCurrUserId}` + "/");
     },
     uploadToReference: (file, metadata) => {
-        dictationRef = Firebase.createDictationUid();
-        return dictationRef.put(file, metadata);
+        let dictationRef = Firebase.getStorageRef();
+        return dictationRef.putString(convertToBlob(file), metadata);
     },
     getAudioReference: (file) => {
-        return firebase.storage().ref(`${Firebase.getCurrUserId}` + "/" + dUid + "_" + file).fullPath;
+        return firebase.storage().ref(`${Firebase.getCurrUserId}` + "/" + file).fullPath;
     },
     deleteDictation: (file) => {
-        return firebase.storage().ref(`${Firebase.getCurrUserId}` + "/" + dUid + "_" + file).delete();
+        return firebase.storage().ref(`${Firebase.getCurrUserId}` + "/" + file).delete();
     },
     getUserDictations: () => {
         return firebase.storage().ref().child(`${Firebase.getCurrUserId}` + "/").listAll();
