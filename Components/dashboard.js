@@ -1,52 +1,87 @@
 import React from "react";
-import { Text, TouchableOpacity, StyleSheet, View } from "react-native";
+import { Text, TouchableOpacity, StyleSheet, View, FlatList } from "react-native";
 import { withFirebaseHOC } from '../Firebase';
-import DictationsList from "./dictationslist";
 import ErrorMsgHandler from "./Alerts/errors";
+import { ListItem } from "react-native-elements";
 
 class Dashboard extends React.Component {
 
   state = {
     user: this.props.firebase.getCurrUserEmail(),
-    message: ""
+    message: "",
+    dictationList: []
   };
-
-  // constructor(dictationList = new DictationsList(), errorMsgHandler = new ErrorMsgHandler()){
-  //   this.dictationList = dictationList;
-  //   this.errorMsgHandler = errorMsgHandler;
-  //   this.dictationList._listDictations();
-  // }
   
-  _userLogout = async () => {
+  componentDidMount = () => {
+    this._getDictations();
+  }
+
+  _userLogout = () => {
     try{
-      await this.props.firebase.logout();
+      this.props.firebase.logout();
     }catch(error) {
-      this.setState({message: this.errorMsgHandler.handleAuthErrMsg(error.code)});
+      // this.setState({message: this.errorMsgHandler.handleAuthErrMsg(error.code)});
       console.log(error);
     }
   }
 
+  _getDictations = async () => {
+    try{
+        let response = await this.props.firebase.getDictationMetadata();
+        if(response == null) this.setState({message: "You have no dictations to view or send. Make one!"});
+        else{
+          this.setState({dictationList: response});
+          console.log(this.state.dictationList);
+        }
+    }catch(error) {
+        // this.setState({message: this.errMsgHandler.handleStoreErrMsg(error.code)});
+        console.log(error);
+    }
+  }
+
+  _keyExtractor = (item, index) => index.toString();
+
+  _renderItem = ({ item }) => (
+    <ListItem
+      title={item.dictationName}
+      bottomDivider
+      chevron
+      //onPress={() => this.props.navigation.navigate("Viewer", {path: item.dictationPath})}
+    />
+    );
+    
   render() {
     return (
-      <View style={styles.container}>
-        <TouchableOpacity style={styles.btn} onPress={this._userLogout}>
-          <Text style={styles.btnText}>LOGOUT</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.btn} onPress={this.props.navigation.navigate("Recorder")}>
-          <Text style={styles.btnText}>Make Dictation</Text>
-        </TouchableOpacity>
+      <View style={styles.listContainer}>
+        <FlatList data={this.state.dictationList} renderItem={this._renderItem} keyExtractor={this._keyExtractor}/>
+        <View style={styles.container}>
+          {!!this.state.message && (
+            <Text style={styles.helperText}>
+              {this.state.message}
+            </Text>
+          )}
+          <TouchableOpacity style={styles.btn} onPress={() => this._userLogout}>
+            <Text style={styles.btnText}>LOGOUT</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.btn} onPress={() => this.props.navigation.navigate("Recorder")}>
+            <Text style={styles.btnText}>Make Dictation</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    
     );
   }
 }
 
 const styles = StyleSheet.create({
+  listContainer: {
+    flex: 1,
+    alignContent: "center",
+    alignItems: "stretch"
+  },
   container: {
     flex: 1,
     backgroundColor: "white",
-    alignItems: "center",
-    justifyContent: "center"
+    alignItems: "center"
   },
   helperText: {
     marginTop: 20,
