@@ -2,13 +2,12 @@ import "@react-native-firebase/auth";
 import * as firebase from "firebase";
 import firebaseConfig from "./firebaseconfig";
 import "@react-native-firebase/app";
-import UUIDGenerator from 'react-native-uuid-generator';
-import "@react-native-firebase/storage"
+import storage from "@react-native-firebase/storage";
+
 
 firebase.initializeApp(firebaseConfig);
-
+dUid = "";
 const Firebase = {
-    dUid,
     login: (email, password) => {
         return firebase.auth().signInWithEmailAndPassword(email, password);
     },
@@ -33,46 +32,40 @@ const Firebase = {
     getCurrUserId: () => {
         return firebase.auth().currentUser.uid;
     },
-    createDictationUid: () => {
-        dUid = UUIDGenerator.getRandomUUID();
-        return firebase.storage().ref().child(`${Firebase.getCurrUserId}` + "/" + dUid + "_");
+    getStorageRef: () => {
+        return storage().ref();
     },
-    uploadToReference: (file, metadata) => {
-        dictationRef = Firebase.createDictationUid();
-        return dictationRef.put(file, metadata);
+    uploadToReference: (file, metadata, fileName) => {
+        let dictationRef = Firebase.getStorageRef();
+        return dictationRef.child(Firebase.getCurrUserId() + "/Dictations/" + fileName)
+        .putFile(file, { contentType: "audio/wav", customMetadata: metadata});
     },
-    getAudioReference: (file) => {
-        return firebase.storage().ref(`${Firebase.getCurrUserId}` + "/" + dUid + "_" + file).fullPath;
-    },
-    deleteDictation: (file) => {
-        return firebase.storage().ref(`${Firebase.getCurrUserId}` + "/" + dUid + "_" + file).delete();
+    deleteDictation: (fileName) => {
+        let dictationRef = Firebase.getStorageRef();
+        return dictationRef.child(Firebase.getCurrUserId() + "/Dictations/" + fileName).delete();
     },
     getUserDictations: () => {
-        return firebase.storage().ref().child(`${Firebase.getCurrUserId}` + "/").listAll();
+        let dictationRef = Firebase.getStorageRef();
+        return dictationRef.child(Firebase.getCurrUserId() + "/Dictations/").listAll();
     },
-    getDictationInfo: (fileRef) => {
-        dictationName = "";
-        dictationDuration = "";
-        dictationPath = fileRef.fullPath;
-        fileRef.getMetadata().then(function(metadata) {
-            fileName = metadata.name;
-            fileDuration = metadata.duration;
-        }).catch(function(error) {
-            return error;
+    getDictationMetadata: () => {
+        let listResult = Firebase.getUserDictations();
+        let metadataList = [];
+        let dictationList = null;
+        
+        return listResult.then((result) => {
+            dictationList = result.items;
+            dictationList.forEach((dictation) => {
+                let metadataObj = {
+                    dictationName: dictation.name, 
+                    fullPath: dictation.fullPath
+                }
+                metadataList.push(metadataObj);
+            });
+            return metadataList;
+        }).catch(function(error){
+            console.log(error);
         });
-        return {
-            dictationName,
-            dictationDuration,
-            dictationPath
-        };
-    },
-    getDictationListInfo: (list) => {
-        dictationsMetadata = [];
-        for (dictation of list) {
-            dictationMetadata = Firebase.getDictationInfo(dictation);
-            dictationsMetadata.push();
-        }
-        return dictationsMetadata;
     }
     
 
