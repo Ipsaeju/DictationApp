@@ -6,6 +6,7 @@ import ForgotPass from "./forgotpass";
 import Dashboard from "./dashboard";
 import Preload from "./preload";
 import Recorder from "./recorder";
+import Viewer from "./viewer";
 
 const AppNav = createStackNavigator();
 
@@ -18,6 +19,7 @@ function StackNav() {
         <AppNav.Screen name="Forgot Password" component={ForgotPass}/>
         <AppNav.Screen name="Dashboard" component={Dashboard}/>
         <AppNav.Screen name="Recorder" component={Recorder}/>
+        <AppNav.Screen name="Viewer" component={Viewer}/>
       </AppNav.Navigator>
   );
 }

@@ -16,7 +16,7 @@ class Dashboard extends React.Component {
     this._getDictations();
   }
 
-  _userLogout = () => {
+  _userLogout = async () => {
     try{
       this.props.firebase.logout();
     }catch(error) {
@@ -46,7 +46,7 @@ class Dashboard extends React.Component {
       title={item.dictationName}
       bottomDivider
       chevron
-      //onPress={() => this.props.navigation.navigate("Viewer", {path: item.dictationPath})}
+      onPress={() => this.props.navigation.navigate("Viewer", item.dictationName)}
     />
     );
     
