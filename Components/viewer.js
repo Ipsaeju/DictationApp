@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, TouchableOpacity, StyleSheet, View, FlatList, Alert } from "react-native";
+import { Text, TouchableOpacity, StyleSheet, View, Alert } from "react-native";
 import { withFirebaseHOC } from '../Firebase';
 import { uploadToFilezilla } from "../Firebase/ftpupload";
 
@@ -7,7 +7,8 @@ class Viewer extends React.Component{
 
     state = {
         dictationName: this.props.route.params
-    }
+    };
+
     _onDelete = async () => {
         try{
             await this.props.firebase.deleteDictation(this.state.dictationName);
@@ -16,7 +17,7 @@ class Viewer extends React.Component{
         }catch(error){
             console.log(error);
         }
-    }
+    };
 
     _onSend = async () => {
         try{
@@ -24,7 +25,7 @@ class Viewer extends React.Component{
         }catch(error){
             console.log(error);
         }
-    }
+    };
 
     render() {
         return(

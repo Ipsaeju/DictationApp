@@ -1,34 +1,36 @@
 import { Alert } from "react-native";
 
-const Warnings = {
-
-    _onDeleteDictation: () => {
-        let resp = false;
-        Alert.alert("Warning", 
+export const _onDeleteDictation = () => {
+    return new Promise((resolve, reject) => {
+        Alert.alert("Warning",
         "Are you sure you want to delete this dictation? This action cannot be undone.",
         [
-            {text: "Yes", onPress: () => resp = true},
-            {text: "Cancel", style: "cancel"}
+            {text: "Yes", onPress: () => resolve(true)},
+            {text: "Cancel", onPress: () => resolve(false)}
         ],
         {cancelable: false});
-        return resp;
-    },
-    _onReturntoDash: () => {
-        let resp = false;
+    })
+}
+
+export const _onReturntoDash = () => {
+    return new Promise((resolve, reject) => {
         Alert.alert("Warning",
         "Are you sure you want to return to dashboard without saving? Your dictation will be gone unless you save.",
         [
-            {text: "Yes", onPress: () => resp = true},
-            {text: "Cancel", style: "cancel"}
+            {text: "Yes", onPress: () => resolve(true)},
+            {text: "Cancel", onPress: () => resolve(false)}
         ],
         {cancelable: false});
-        return resp;
-    },
-    _onSuccessfulReset: () => {
-        Alert.alert("Success",
-        "Password reset email has been sent. Please check your email as soon as possible to reset your password.");
-    }   
-
+    })
 }
 
-export default Warnings;
+export const _onSuccessfulReset = () => {
+    return new Promise((resolve, reject) => {
+        Alert.alert("Success",
+        "Password reset email has been sent. Please check your email as soon as possible to reset your password.",
+        [
+            {text: "OK", onPress: () => resolve(true)}
+        ],
+        {cancelable: false});
+    })
+}  
