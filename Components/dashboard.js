@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, TouchableOpacity, StyleSheet, View, FlatList } from "react-native";
+import { Text, TouchableOpacity, StyleSheet, View, FlatList, ScrollView } from "react-native";
 import { withFirebaseHOC } from '../Firebase';
 import ErrorMsgHandler from "./Alerts/errors";
 import { ListItem } from "react-native-elements";
@@ -46,27 +46,29 @@ class Dashboard extends React.Component {
       title={item.dictationName}
       bottomDivider
       chevron
-      onPress={() => this.props.navigation.navigate("Viewer", item.dictationName)}
+      onPress={() => this.props.navigation.navigate("Viewer", { dictationName: item.dictationName, dictationPath: item.fullPath })}
     />
     );
     
   render() {
     return (
       <View style={styles.listContainer}>
-        <FlatList data={this.state.dictationList} renderItem={this._renderItem} keyExtractor={this._keyExtractor}/>
-        <View style={styles.container}>
-          {!!this.state.message && (
-            <Text style={styles.helperText}>
-              {this.state.message}
-            </Text>
-          )}
-          <TouchableOpacity style={styles.btn} onPress={() => this._userLogout}>
-            <Text style={styles.btnText}>LOGOUT</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.btn} onPress={() => this.props.navigation.navigate("Recorder")}>
-            <Text style={styles.btnText}>Make Dictation</Text>
-          </TouchableOpacity>
-        </View>
+        <FlatList data={this.state.dictationList} extraData={this.state} renderItem={this._renderItem} keyExtractor={this._keyExtractor}/>
+        <ScrollView>
+          <View style={styles.container}>
+            {!!this.state.message && (
+              <Text style={styles.helperText}>
+                {this.state.message}
+              </Text>
+            )}
+            <TouchableOpacity style={styles.btn} onPress={this._userLogout}>
+              <Text style={styles.btnText}>LOGOUT</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.btn} onPress={() => this.props.navigation.navigate("Recorder")}>
+              <Text style={styles.btnText}>Make Dictation</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </View>
     );
   }
@@ -87,11 +89,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     color: "#777777",
     fontSize: 12
-  },
-  warningText: {
-    color: "red",
-    fontSize: 12,
-    padding: 5
   },
   btn: {
     width: "80%",

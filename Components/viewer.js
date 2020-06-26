@@ -2,58 +2,64 @@ import React from "react";
 import { Text, TouchableOpacity, StyleSheet, View, Alert } from "react-native";
 import { withFirebaseHOC } from '../Firebase';
 import { uploadToFilezilla } from "../Firebase/ftpupload";
+import _onDeleteDictation from "./Alerts/warnings";
 
 class Viewer extends React.Component{
+  state = {
+    dictationName: this.props.route.params.dictationName,
+    dictationPath: this.props.route.params.dictationPath
+  };
 
-    state = {
-        dictationName: this.props.route.params
-    };
-
-    _onDelete = async () => {
-        try{
-            await this.props.firebase.deleteDictation(this.state.dictationName);
-            Alert.alert("Dictation was succesfully deleted.");
-            this.props.navigation.navigate("Dashboard");
-        }catch(error){
-            console.log(error);
-        }
-    };
-
-    _onSend = async () => {
-        try{
-            await uploadToFilezilla(this.state.dictationName);
-        }catch(error){
-            console.log(error);
-        }
-    };
-
-    render() {
-        return(
-            <Text style={styles.helperText}>{this.props.route.params}</Text>
-        )
+  _onDelete = async () => {
+    resp = await _onDeleteDictation();
+    if(resp){
+      try{
+        await this.props.firebase.deleteDictation(this.state.dictationName);
+        Alert.alert("Dictation was succesfully deleted.");
+        this.props.navigation.navigate("Dashboard");
+      }catch(error){
+          console.log(error);
+      }
     }
+  };
+
+  _onSend = async () => {
+    try{
+      await uploadToFilezilla(this.state.dictationPath);
+    }catch(error){
+      console.log(error);
+    }
+  };
+
+  render() {
+    return(
+      <View style={styles.container}>
+        <Text style={styles.titleText}>What would you like to do with {this.state.dictationName}?</Text>
+        <TouchableOpacity style={styles.btn} onPress={this._onDelete}>
+          <Text style={styles.btnText}>Delete Dictation</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.btn} onPress={this._onSend}>
+          <Text style={styles.btnText}>Upload to FileZilla</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.btn} onPress={this.props.navigation.navigate("Dashboard")}>
+          <Text style={styles.btnText}>Return to Dashboard</Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
 }
 
 const styles = StyleSheet.create({
-  listContainer: {
-    flex: 1,
-    alignContent: "center",
-    alignItems: "stretch"
-  },
   container: {
     flex: 1,
     backgroundColor: "white",
     alignItems: "center"
   },
-  helperText: {
-    marginTop: 20,
+  titleText: {
     color: "#777777",
-    fontSize: 12
-  },
-  warningText: {
-    color: "red",
-    fontSize: 12,
-    padding: 5
+    fontSize: 22,
+    padding: 5,
+    textAlign: "center"
   },
   btn: {
     width: "80%",

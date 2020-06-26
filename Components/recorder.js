@@ -1,7 +1,7 @@
 import React from "react";
 import { RNVoiceRecorder } from "react-native-voice-recorder";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ImageBackground, ScrollView} from "react-native";
-import Warnings from "./Alerts/warnings";
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ImageBackground, ScrollView, Alert} from "react-native";
+import { _onDeleteDictation } from "./Alerts/warnings";
 import { withFirebaseHOC } from '../Firebase';
 
 let recordingPath;
@@ -12,7 +12,7 @@ class Recorder extends React.Component{
     successMessage: ""
   };
 
-  _onRecord = () => {
+  _onRecord = async () => {
     if(this.state.dictationName == null || this.state.dictationName == ""){
       this.setState({message: "Name the dictation audio first before recording!"});
     }
@@ -27,7 +27,7 @@ class Recorder extends React.Component{
             recorder: this.props.firebase.getCurrUserEmail()
           };
           try{
-            let uploadTask = this.props.firebase.uploadToReference(file, metadata, this.state.dictationName);
+            let uploadTask = await this.props.firebase.uploadToReference(file, metadata, this.state.dictationName);
             this.setState({successMessage: "Upload success"});
             console.log(uploadTask);
           }catch(error){
@@ -60,34 +60,19 @@ class Recorder extends React.Component{
     }
   }
 
-  _onDelete = () => {
-    response = Warnings._onDeleteDictation();
+  _onDelete = async () => {
+    response = await _onDeleteDictation();
     if(response){
-      deleteResp = this.props.firebase.deleteDictation(this.state.dictationName).then(function() {
-        this.setState({
-          message: "Dictation deleted successfully"});
-      }).catch(function(error) {
-        if(error.code === "storage/object-not-found"){
-          this.setState({message: "Dictation was not found or already deleted. Returning you back to dashboard"});
-          this.props.navigation.navigate("Dashboard");
-        }
-        else if(error.code === "storage/retry-limit-exceeded"){
-          this.setState({message: "This delete has taken too long to perform. Please try again another time"});
-        }
-      })
+      try{
+        await this.props.firebase.deleteDictation(this.state.dictationName);
+        Alert.alert("Dictation was succesfully deleted.");
+      }catch(error){
+
+      }
     }
   }
 
   _onReturn = () => {
-    // if(recordingPath == null){
-    //   let response = Warnings._onReturntoDash();
-    //   if(response === true){
-    //     this.props.navigation.navigate("Dashboard");
-    //   }
-    // }
-    // else{
-    //   this.props.navigation.navigate("Dashboard");
-    // }
     this.props.navigation.navigate("Dashboard");
   }
  
@@ -117,21 +102,21 @@ class Recorder extends React.Component{
             </View>
             <View style={styles.recordButtonsView}>
               <Text style={styles.helperTxt}>Ready to Record</Text>
-              <TouchableOpacity onPress={() => this._onRecord}>
+              <TouchableOpacity onPress={this._onRecord}>
                 <Image style={styles.buttons} source={require("../Assets/RecordButtonIdle.png")}/>
               </TouchableOpacity>
             </View>
             <View style={styles.playbackView}>
               <Text style={styles.helperTxt}>Recording Playback</Text>
-              <TouchableOpacity onPress={() => this._onPlayback}>
+              <TouchableOpacity onPress={this._onPlayback}>
                 <Image style={styles.buttons} source={require("../Assets/PlayButton.png")}/>
               </TouchableOpacity>
             </View>
             <View style={styles.dictationView}>
-              <TouchableOpacity onPress={() => this._onDelete}>
+              <TouchableOpacity onPress={this._onDelete}>
                 <Image style={styles.buttons} source={require("../Assets/DeleteButton.png")}/>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => this._onReturn}>
+              <TouchableOpacity onPress={this._onReturn}>
                 <Image style={styles.buttons} source={require("../Assets/ReturnButton.png")}/>
               </TouchableOpacity>
             </View>

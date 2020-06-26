@@ -12,18 +12,6 @@ export const _onDeleteDictation = () => {
     })
 }
 
-export const _onReturntoDash = () => {
-    return new Promise((resolve, reject) => {
-        Alert.alert("Warning",
-        "Are you sure you want to return to dashboard without saving? Your dictation will be gone unless you save.",
-        [
-            {text: "Yes", onPress: () => resolve(true)},
-            {text: "Cancel", onPress: () => resolve(false)}
-        ],
-        {cancelable: false});
-    })
-}
-
 export const _onSuccessfulReset = () => {
     return new Promise((resolve, reject) => {
         Alert.alert("Success",

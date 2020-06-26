@@ -1,13 +1,21 @@
 
-class ErrorMsgHandler {
+export const _handleStoreErr = (error) => {
+
     storeErrList = {
         "storage/unknown": "An unknown error occurred. Please try again or contact a system admin if error persists.", 
-        "storage/object-not-found": "", 
+        "storage/object-not-found": "The dictation was not found or it has already been deleted.", 
         "storage/quota-exceeded": "Please contact a system admin to let them know the free tier has exceeded size limit.", 
         "storage/unauthenticated": "Please login and try again.", 
         "storage/retry-limit-exceeded": "This save has taken too long to perform. Please try again",
     };
-    
+
+    for(err in storeErrList){
+        if(err === error) return storeErrList[err];
+        else return "An unknown error has occurred. Please try again or contact a system admin.";
+    }
+}
+
+export const _handleAuthErr = (error) => {
     authErrList = {
         "auth/invalid-email": "Incorrect email provided.", 
         "auth/email-already-in-use": "An account has already been made with this email. Please login or reset your password.", 
@@ -17,21 +25,8 @@ class ErrorMsgHandler {
         "auth/wrong-password": "The password provided does not match the records of this account."
     };
 
-    handleAuthErrMsg(error){
-        for(err in this.authErrList){
-            if(err === error){
-                return this.authErrList[err];
-            }
-        }
-    }
-
-    handleStoreErrMsg(error){
-        for(err in this.storeErrList){
-            if(err === error){
-                return this.storeErrList[err];
-            }
-        }
+    for(err in this.authErrList){
+        if(err === error) return this.authErrList[err];
+        else return "An unknown error occurred. Please try again or contact a system admin.";
     }
 }
-
-export default ErrorMsgHandler;
