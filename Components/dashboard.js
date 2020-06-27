@@ -3,6 +3,9 @@ import { Text, TouchableOpacity, StyleSheet, View, FlatList, ScrollView } from "
 import { withFirebaseHOC } from '../Firebase';
 import ErrorMsgHandler from "./Alerts/errors";
 import { ListItem } from "react-native-elements";
+import bottomTab from "./bottomnav";
+import { NavigationContainer } from "@react-navigation/native";
+
 
 class Dashboard extends React.Component {
 
@@ -61,14 +64,15 @@ class Dashboard extends React.Component {
                 {this.state.message}
               </Text>
             )}
-            <TouchableOpacity style={styles.btn} onPress={this._userLogout}>
+            {/* <TouchableOpacity style={styles.btn} onPress={this._userLogout}>
               <Text style={styles.btnText}>LOGOUT</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.btn} onPress={() => this.props.navigation.navigate("Recorder")}>
               <Text style={styles.btnText}>Make Dictation</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </ScrollView>
+        <bottomTab/>
       </View>
     );
   }
