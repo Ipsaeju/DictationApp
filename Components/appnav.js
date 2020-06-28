@@ -19,9 +19,8 @@ function StackNav() {
         <AppNav.Screen name="Login" component={Login}/>
         <AppNav.Screen name="Register" component={Register}/>
         <AppNav.Screen name="Forgot Password" component={ForgotPass}/>
-        <AppNav.Screen name="Dashboard" component={bottomNav}/>
-        {/* <AppNav.Screen name="Recorder" component={Recorder}/> */}
         <AppNav.Screen name="Viewer" component={Viewer}/>
+        <AppNav.Screen name="Dashboard" component={bottomNav}/>
       </AppNav.Navigator>
   );
 }

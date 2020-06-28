@@ -42,7 +42,7 @@ const Firebase = {
     },
     deleteDictation: (fileName) => {
         let dictationRef = Firebase.getStorageRef();
-        return dictationRef.child(Firebase.getCurrUserId() + "/Dictations/" + fileName + ".wav").delete();
+        return dictationRef.child(Firebase.getCurrUserId() + "/Dictations/" + fileName).delete();
     },
     getUserDictations: () => {
         let dictationRef = Firebase.getStorageRef();

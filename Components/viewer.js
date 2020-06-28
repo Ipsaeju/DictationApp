@@ -2,7 +2,7 @@ import React from "react";
 import { Text, TouchableOpacity, StyleSheet, View, Alert } from "react-native";
 import { withFirebaseHOC } from '../Firebase';
 import { uploadToFilezilla } from "../Firebase/ftpupload";
-import _onDeleteDictation from "./Alerts/warnings";
+import { _onDeleteDictation } from "./Alerts/warnings";
 
 class Viewer extends React.Component{
   state = {
@@ -11,16 +11,17 @@ class Viewer extends React.Component{
   };
 
   _onDelete = async () => {
-    resp = await _onDeleteDictation();
-    if(resp){
+    
       try{
-        await this.props.firebase.deleteDictation(this.state.dictationName);
-        Alert.alert("Dictation was succesfully deleted.");
-        this.props.navigation.navigate("Dashboard");
+        let resp = await _onDeleteDictation();
+        if(resp === true){
+          await this.props.firebase.deleteDictation(this.state.dictationName);
+          Alert.alert("Dictation was succesfully deleted.");
+          this.props.navigation.navigate("DashList");
+        }
       }catch(error){
           console.log(error);
       }
-    }
   };
 
   _onSend = async () => {
@@ -41,7 +42,7 @@ class Viewer extends React.Component{
         <TouchableOpacity style={styles.btn} onPress={this._onSend}>
           <Text style={styles.btnText}>Upload to FileZilla</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.btn} onPress={this.props.navigation.navigate("Dashboard")}>
+        <TouchableOpacity style={styles.btn} onPress={() => this.props.navigation.navigate("DashList")}>
           <Text style={styles.btnText}>Return to Dashboard</Text>
         </TouchableOpacity>
       </View>

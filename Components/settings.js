@@ -1,5 +1,6 @@
 import React from "react";
-import { Text, TouchableOpacity, StyleSheet, View, ImageBackground} from "react-native";
+import { Text, TouchableOpacity, StyleSheet, ImageBackground} from "react-native";
+import { withFirebaseHOC } from '../Firebase';
 
 class SettingsScreen extends React.Component{
 
@@ -23,32 +24,26 @@ class SettingsScreen extends React.Component{
     render() {
         return(
             <ImageBackground source={require("../Assets/MedicalBackground.png")} style={styles.container}>
-                <View>
-                    <TouchableOpacity style={styles.btn} onPress={this._userLogout}>
-                        <Text style={styles.btnText}>LOGOUT</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.btn} onPress={this._displayManual}>
-                        <Text style={styles.btnText}>USER MANUAL</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.btn} onPress={this._displayAbout}>
-                        <Text style={styles.btnText}>ABOUT</Text>
-                    </TouchableOpacity>
-                </View>
+                <TouchableOpacity style={styles.btn} onPress={this._userLogout}>
+                  <Text style={styles.btnText}>LOGOUT</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.btn} onPress={this._displayManual}>
+                  <Text style={styles.btnText}>USER MANUAL</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.btn} onPress={this._displayAbout}>
+                  <Text style={styles.btnText}>ABOUT</Text>
+                </TouchableOpacity>
             </ImageBackground>
         )
     }
 }
 
 const styles = StyleSheet.create({
-  listContainer: {
-    flex: 1,
-    alignContent: "center",
-    alignItems: "stretch"
-  },
   container: {
     flex: 1,
     backgroundColor: "white",
-    alignItems: "center"
+    alignItems: "center",
+    justifyContent: "center"
   },
   helperText: {
     marginTop: 20,
@@ -57,12 +52,12 @@ const styles = StyleSheet.create({
   },
   btn: {
     width: "80%",
-    backgroundColor: "#fb5b5a",
+    backgroundColor: "#1754e3",
     borderRadius: 25,
     height: 50,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 40,
+    marginTop: 10,
     marginBottom: 10
   },
   btnText: {
@@ -70,4 +65,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default SettingsScreen;
+export default withFirebaseHOC(SettingsScreen);

@@ -71,10 +71,6 @@ class Recorder extends React.Component{
       }
     }
   }
-
-  _onReturn = () => {
-    this.props.navigation.navigate("Dashboard");
-  }
  
   render() {
     return (
@@ -105,19 +101,14 @@ class Recorder extends React.Component{
               <TouchableOpacity onPress={this._onRecord}>
                 <Image style={styles.buttons} source={require("../Assets/RecordButtonIdle.png")}/>
               </TouchableOpacity>
-            </View>
-            <View style={styles.playbackView}>
               <Text style={styles.helperTxt}>Recording Playback</Text>
+            </View>
+            <View style={styles.dictationView}>
               <TouchableOpacity onPress={this._onPlayback}>
                 <Image style={styles.buttons} source={require("../Assets/PlayButton.png")}/>
               </TouchableOpacity>
-            </View>
-            <View style={styles.dictationView}>
               <TouchableOpacity onPress={this._onDelete}>
                 <Image style={styles.buttons} source={require("../Assets/DeleteButton.png")}/>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={this._onReturn}>
-                <Image style={styles.buttons} source={require("../Assets/ReturnButton.png")}/>
               </TouchableOpacity>
             </View>
           </ImageBackground>
@@ -141,12 +132,10 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     textAlign: "center"
   },
-  playbackView: {
-    alignContent: "center",
-    paddingBottom: 8
-  },
   dictationView: {
-    alignContent: "space-around",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    flexDirection: "row",
     paddingBottom: 8
   },
   inputView: {
