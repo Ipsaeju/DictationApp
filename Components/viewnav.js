@@ -10,7 +10,7 @@ function viewStack() {
   return(
     <viewNav.Navigator initialRouteName="DashList" screenOptions={{
       headerShown: false}}>
-        <viewNav.Screen name="DashList" component={DashList}/>
+        <viewNav.Screen name="DashList" component={DashList} options={{title: "Welcome Back!"}}/>
         <viewNav.Screen name="Viewer" component={Viewer}/>
       </viewNav.Navigator>
   );
