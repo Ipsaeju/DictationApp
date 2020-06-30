@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ScrollView, ImageBackground } from "react-native";
 import { withFirebaseHOC } from '../Firebase';
+import { _handleAuthErr } from "./Alerts/errors";
 
 class Login extends React.Component {
   state = {
@@ -9,9 +10,15 @@ class Login extends React.Component {
     message: ""  
   };
 
-  _userLogin = async () => {
+  componentDidMount = () => {
     this.setState({message: ""});
+  }
 
+  componentDidUpdate = () => {
+    setTimeout(() => this.setState({message: ""}), 4000);
+  }
+
+  _userLogin = async () => {
     var params = {
       email: this.state.email,
       password: this.state.password
@@ -21,7 +28,7 @@ class Login extends React.Component {
       const response = await this.props.firebase.login(params.email, params.password);
       if(response.user) this.props.navigation.navigate("Dashboard");
     }catch(error) {
-      this.setState({message: error.message});
+      this.setState({message: _handleAuthErr(error.code)});
     }
 
   }
@@ -72,8 +79,7 @@ class Login extends React.Component {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.loginBtn}
-              onPress={() => this.props.navigation.navigate("Register")}
-            >
+              onPress={() => this.props.navigation.navigate("Register")}>
               <Text style={styles.btnText}>REGISTER</Text>
             </TouchableOpacity>
           </ImageBackground>
@@ -120,9 +126,12 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   warningText: {
-    color: "red",
-    fontSize: 20,
-    padding: 5
+    color: "white",
+    fontSize: 18,
+    padding: 5,
+    backgroundColor: "red",
+    alignSelf: "center",
+    borderRadius: 15
   },
   loginBtn: {
     width: "80%",

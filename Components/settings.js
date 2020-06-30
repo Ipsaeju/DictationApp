@@ -1,25 +1,37 @@
 import React from "react";
 import { Text, TouchableOpacity, StyleSheet, ImageBackground} from "react-native";
 import { withFirebaseHOC } from '../Firebase';
+import { _handleAuthErr } from "./Alerts/errors";
 
 class SettingsScreen extends React.Component{
 
-    _userLogout = async () => {
-        try{
-          this.props.firebase.logout();
-        }catch(error) {
-          // this.setState({message: this.errorMsgHandler.handleAuthErrMsg(error.code)});
-          console.log(error);
-        }
-    }
+  state = {
+    message: ""
+  };
 
-    _displayManual = () => {
-        //TODO: Make user manual
-    }
+  componentDidMount = () => {
+    this.setState({message: ""});
+  }
 
-    _displayAbout = () => {
+  componentDidUpdate = () => {
+    setTimeout(() => this.setState({message: ""}), 4000);
+  }
+  
+  _userLogout = async () => {
+      try{
+        this.props.firebase.logout();
+      }catch(error) {
+        this.setState({message: _handleAuthErr(error.code)});
+      }
+  }
 
-    }
+  _displayManual = () => {
+      //TODO: Make user manual
+  }
+
+  _displayAbout = () => {
+
+  }
 
     render() {
         return(

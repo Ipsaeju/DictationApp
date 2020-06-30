@@ -1,7 +1,7 @@
 import React from "react";
-import { Text, TouchableOpacity, StyleSheet, View, FlatList, ScrollView } from "react-native";
+import { Text, StyleSheet, View, FlatList} from "react-native";
 import { withFirebaseHOC } from '../Firebase';
-import ErrorMsgHandler from "./Alerts/errors";
+import { _handleStoreErr } from "./Alerts/errors";
 import { ListItem } from "react-native-elements";
 
 
@@ -10,24 +10,28 @@ class DashList extends React.Component {
   state = {
     user: this.props.firebase.getCurrUserEmail(),
     message: "",
-    dictationList: []
+    dictationList: [],
+    emptyMessage: ""
   };
   
   componentDidMount = () => {
     this._getDictations();
   }
 
+  componentDidUpdate = () => {
+    this._getDictations();
+    setTimeout(() => this.setState({message: ""}), 4000);
+  }
+
   _getDictations = async () => {
     try{
         let response = await this.props.firebase.getDictationMetadata();
-        if(response == null) this.setState({message: "You have no dictations to view or send. Make one!"});
+        if(response == null) this.setState({emptyMessage: "You have no dictations to view or send. Make one!"});
         else{
           this.setState({dictationList: response});
-          console.log(this.state.dictationList);
         }
     }catch(error) {
-        // this.setState({message: this.errMsgHandler.handleStoreErrMsg(error.code)});
-        console.log(error);
+        this.setState({message: _handleStoreErr(error.code)});
     }
   }
 
@@ -38,17 +42,21 @@ class DashList extends React.Component {
       title={item.dictationName}
       bottomDivider
       chevron
-      onPress={() => this.props.navigation.navigate("Viewer", { dictationName: item.dictationName, dictationPath: item.fullPath })}
-    />
+      onPress={() => this.props.navigation.navigate("Viewer", { dictationName: item.dictationName, dictationPath: item.fullPath })}/>
     );
     
   render() {
     return (
       <View style={styles.listContainer}>
+        {!!this.state.emptyMessage && (
+          <Text style={styles.emptyText}>
+            {this.state.emptyMessage}
+          </Text>
+        )}
         <FlatList data={this.state.dictationList} extraData={this.state} renderItem={this._renderItem} keyExtractor={this._keyExtractor}/>
         <View style={styles.container}>
             {!!this.state.message && (
-              <Text style={styles.helperText}>
+              <Text style={styles.warningText}>
                 {this.state.message}
               </Text>
             )}
@@ -69,23 +77,18 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignItems: "center"
   },
-  helperText: {
+  warningText: {
+    color: "white",
+    fontSize: 18,
+    padding: 5,
+    backgroundColor: "red",
+    alignSelf: "center",
+    borderRadius: 15
+  },
+  emptyText: {
     marginTop: 20,
     color: "#777777",
     fontSize: 12
-  },
-  btn: {
-    width: "80%",
-    backgroundColor: "#fb5b5a",
-    borderRadius: 25,
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 40,
-    marginBottom: 10
-  },
-  btnText: {
-    color: "white"
   }
 });
 

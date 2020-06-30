@@ -3,38 +3,50 @@ import { Text, TouchableOpacity, StyleSheet, View, Alert } from "react-native";
 import { withFirebaseHOC } from '../Firebase';
 import { uploadToFilezilla } from "../Firebase/ftpupload";
 import { _onDeleteDictation } from "./Alerts/warnings";
+import { _handleStoreErr } from "./Alerts/errors";
 
 class Viewer extends React.Component{
   state = {
     dictationName: this.props.route.params.dictationName,
-    dictationPath: this.props.route.params.dictationPath
+    dictationPath: this.props.route.params.dictationPath,
+    message: ""
   };
 
+  componentDidUpdate = () => {
+    setTimeout(() => this.setState({message: ""}), 4000);
+  }
+
   _onDelete = async () => {
-    
-      try{
-        let resp = await _onDeleteDictation();
-        if(resp === true){
-          await this.props.firebase.deleteDictation(this.state.dictationName);
-          Alert.alert("Dictation was succesfully deleted.");
-          this.props.navigation.navigate("DashList");
-        }
-      }catch(error){
-          console.log(error);
+    try{
+      let resp = await _onDeleteDictation();
+      if(resp === true){
+        await this.props.firebase.deleteDictation(this.state.dictationName);
+        Alert.alert("Dictation was succesfully deleted.");
+        this.props.navigation.navigate("DashList");
       }
+    }catch(error){
+      this.setState({message: _handleStoreErr(error.code)});
+    }
   };
 
   _onSend = async () => {
     try{
       await uploadToFilezilla(this.state.dictationPath);
+      Alert.alert("Dictation successfully sent.");
+      this.props.navigation.navigate("DashList");
     }catch(error){
-      console.log(error);
+      this.setState({message: "There was an error in sending the dictation to FileZilla. Please try again or contact a system admin."});
     }
   };
 
   render() {
     return(
       <View style={styles.container}>
+        {!!this.state.message && (
+          <Text style={styles.warningText}>
+            {this.state.message}
+          </Text>
+        )}
         <Text style={styles.titleText}>What would you like to do with {this.state.dictationName}?</Text>
         <TouchableOpacity style={styles.btn} onPress={this._onDelete}>
           <Text style={styles.btnText}>Delete Dictation</Text>
@@ -58,9 +70,17 @@ const styles = StyleSheet.create({
   },
   titleText: {
     color: "#777777",
-    fontSize: 22,
+    fontSize: 20,
     padding: 5,
     textAlign: "center"
+  },
+  warningText: {
+    color: "white",
+    fontSize: 18,
+    padding: 5,
+    backgroundColor: "red",
+    alignSelf: "center",
+    borderRadius: 15
   },
   btn: {
     width: "80%",
