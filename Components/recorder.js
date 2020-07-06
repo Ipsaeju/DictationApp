@@ -1,8 +1,9 @@
 import React from "react";
 import { RNVoiceRecorder } from "react-native-voice-recorder";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ImageBackground, ScrollView} from "react-native";
-import Warnings from "./Alerts/warnings";
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ImageBackground, ScrollView, Alert } from "react-native";
+import { _onDeleteDictation } from "./Alerts/warnings";
 import { withFirebaseHOC } from '../Firebase';
+import { _handleStoreErr } from "./Alerts/errors";
 
 let recordingPath;
 class Recorder extends React.Component{
@@ -12,7 +13,15 @@ class Recorder extends React.Component{
     successMessage: ""
   };
 
-  _onRecord = () => {
+  componentDidMount = () => {
+    this.setState({message: ""});
+  }
+
+  componentDidUpdate = () => {
+    setTimeout(() => this.setState({message: ""}), 4000);
+  }
+
+  _onRecord = async () => {
     if(this.state.dictationName == null || this.state.dictationName == ""){
       this.setState({message: "Name the dictation audio first before recording!"});
     }
@@ -27,11 +36,11 @@ class Recorder extends React.Component{
             recorder: this.props.firebase.getCurrUserEmail()
           };
           try{
-            let uploadTask = this.props.firebase.uploadToReference(file, metadata, this.state.dictationName);
+            let uploadTask = await this.props.firebase.uploadToReference(file, metadata, this.state.dictationName);
             this.setState({successMessage: "Upload success"});
             console.log(uploadTask);
           }catch(error){
-            console.log(error);
+            this.setState({message: _handleStoreErr(error.code)});
           }
         },
         onCancel: () => {
@@ -55,40 +64,22 @@ class Recorder extends React.Component{
         }
       });
     }
+    else this.setState({message: "Please record and save audio first before listening to it!"});
+  }
+
+  _onDelete = async () => {
+    if(recordingPath == null) this.setState({message: "There is nothing to delete!"});
     else{
-      this.setState({message: "Please record and save the audio first before listening to it"});
-    }
-  }
-
-  _onDelete = () => {
-    response = Warnings._onDeleteDictation();
-    if(response){
-      deleteResp = this.props.firebase.deleteDictation(this.state.dictationName).then(function() {
-        this.setState({
-          message: "Dictation deleted successfully"});
-      }).catch(function(error) {
-        if(error.code === "storage/object-not-found"){
-          this.setState({message: "Dictation was not found or already deleted. Returning you back to dashboard"});
-          this.props.navigation.navigate("Dashboard");
+      response = await _onDeleteDictation();
+      if(response){
+        try{
+          await this.props.firebase.deleteDictation(this.state.dictationName);
+          Alert.alert("Dictation was succesfully deleted.");
+        }catch(error){
+          this.setState({message: _handleStoreErr(error.code)});
         }
-        else if(error.code === "storage/retry-limit-exceeded"){
-          this.setState({message: "This delete has taken too long to perform. Please try again another time"});
-        }
-      })
+      }
     }
-  }
-
-  _onReturn = () => {
-    // if(recordingPath == null){
-    //   let response = Warnings._onReturntoDash();
-    //   if(response === true){
-    //     this.props.navigation.navigate("Dashboard");
-    //   }
-    // }
-    // else{
-    //   this.props.navigation.navigate("Dashboard");
-    // }
-    this.props.navigation.navigate("Dashboard");
   }
  
   render() {
@@ -117,22 +108,17 @@ class Recorder extends React.Component{
             </View>
             <View style={styles.recordButtonsView}>
               <Text style={styles.helperTxt}>Ready to Record</Text>
-              <TouchableOpacity onPress={() => this._onRecord}>
+              <TouchableOpacity onPress={this._onRecord}>
                 <Image style={styles.buttons} source={require("../Assets/RecordButtonIdle.png")}/>
               </TouchableOpacity>
-            </View>
-            <View style={styles.playbackView}>
-              <Text style={styles.helperTxt}>Recording Playback</Text>
-              <TouchableOpacity onPress={() => this._onPlayback}>
-                <Image style={styles.buttons} source={require("../Assets/PlayButton.png")}/>
-              </TouchableOpacity>
+              <Text style={styles.helperTxt}>Playback  /  Delete</Text>
             </View>
             <View style={styles.dictationView}>
-              <TouchableOpacity onPress={() => this._onDelete}>
-                <Image style={styles.buttons} source={require("../Assets/DeleteButton.png")}/>
+              <TouchableOpacity onPress={this._onPlayback}>
+                <Image style={styles.buttons} source={require("../Assets/PlayButton.png")}/>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => this._onReturn}>
-                <Image style={styles.buttons} source={require("../Assets/ReturnButton.png")}/>
+              <TouchableOpacity onPress={this._onDelete}>
+                <Image style={styles.buttons} source={require("../Assets/DeleteButton.png")}/>
               </TouchableOpacity>
             </View>
           </ImageBackground>
@@ -156,12 +142,10 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     textAlign: "center"
   },
-  playbackView: {
-    alignContent: "center",
-    paddingBottom: 8
-  },
   dictationView: {
-    alignContent: "space-around",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    flexDirection: "row",
     paddingBottom: 8
   },
   inputView: {
@@ -185,16 +169,20 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   warningText: {
-    color: "red",
+    color: "white",
     fontSize: 18,
     padding: 5,
-    textAlign: "center"
+    backgroundColor: "red",
+    alignSelf: "center",
+    borderRadius: 15
   },
   successText: {
-    color: "green",
+    color: "white",
     fontSize: 18,
     padding: 5,
-    textAlign: "center"
+    backgroundColor: "green",
+    alignSelf: "center",
+    borderRadius: 15
   }
 });
 

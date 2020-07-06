@@ -1,14 +1,8 @@
 import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-  ImageBackground
-} from "react-native";
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ImageBackground, Alert } from "react-native";
 import { withFirebaseHOC } from '../Firebase';
-import Warnings from "./Alerts/warnings";
+import { _onSuccessfulReset } from "./Alerts/warnings";
+import { _handleAuthErr } from "./Alerts/errors";
 
 class ForgotPass extends React.Component {
   state = {
@@ -22,11 +16,10 @@ class ForgotPass extends React.Component {
 
     try{
       await this.props.firebase.resetPass(params.email);
-      Warnings._onSuccessfulReset();
+      await _onSuccessfulReset();
       this.props.navigation.navigate("Login");
     }catch(error){
-      alert("There was an error in sending the password reset code. Please try again or contact a system admin");
-      console.log(error);
+      Alert.alert(_handleAuthErr(error.code));
     }
   }
 
@@ -34,6 +27,7 @@ class ForgotPass extends React.Component {
     return (
       <View>
         <ImageBackground source={require("../Assets/MedicalBackground.png")} style={styles.container}>
+          <Text style={styles.titleText}>Password Recovery</Text>
           <Text style={styles.instructionsText}>
             Enter the email you registered with and
           </Text>
@@ -102,9 +96,20 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   warningText: {
-    color: "red",
-    fontSize: 28,
-    padding: 5
+    color: "white",
+    fontSize: 18,
+    padding: 5,
+    backgroundColor: "red",
+    alignSelf: "center",
+    borderRadius: 15
+  },
+  titleText: {
+    color: "#555555",
+    marginTop: 18,
+    marginBottom: 8,
+    fontSize: 24,
+    textAlign: "center",
+    fontWeight: "600"
   },
   btns: {
     width: "80%",

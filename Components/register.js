@@ -1,14 +1,8 @@
 import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-  ImageBackground
-} from "react-native";
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ImageBackground } from "react-native";
 import { withFirebaseHOC } from '../Firebase';
 import { ScrollView } from "react-native-gesture-handler";
+import { _handleAuthErr } from "./Alerts/errors";
 
 class Register extends React.Component {
   state = {
@@ -18,9 +12,15 @@ class Register extends React.Component {
     message: ""
   };
 
-  _createAccount = async () => {
+  componentDidMount = () => {
     this.setState({message: ""});
+  }
 
+  componentDidUpdate = () => {
+    setTimeout(() => this.setState({message: ""}), 4000);
+  }
+
+  _createAccount = async () => {
     var params = {
       email: this.state.email,
       password: this.state.password,
@@ -38,11 +38,9 @@ class Register extends React.Component {
         this.props.navigation.navigate("Login");
       }
     }catch(error){
-      if(error.code === 'auth/email-already-in-use') 
-      this.setState({message: "This email is already in use!"});
-      if(error.code === 'auth/invalid-email') this.setState({message: "This email is invalid!"});
+      console.log(error);
+      this.setState({message: _handleAuthErr(error.code)});
     }
-
   }
 
   render() {
@@ -50,6 +48,7 @@ class Register extends React.Component {
       <View>
         <ScrollView>
           <ImageBackground source={require("../Assets/MedicalBackground.png")} style={styles.container}>
+            <Text style={styles.title}>Create Account</Text>
             {!!this.state.message && (
               <Text style={styles.warningText}>
                 {this.state.message}
@@ -113,8 +112,9 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     height: 50,
     marginBottom: 18,
+    marginTop: 15,
     justifyContent: "center",
-    padding: 20,
+    padding: 25,
     opacity: 80
   },
   inputText: {
@@ -128,9 +128,20 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   warningText: {
-    color: "red",
-    fontSize: 28,
-    padding: 5
+    color: "white",
+    fontSize: 18,
+    padding: 5,
+    backgroundColor: "red",
+    alignSelf: "center",
+    borderRadius: 15
+  },
+  titleText: {
+    color: "#555555",
+    marginTop: 18,
+    marginBottom: 8,
+    fontSize: 24,
+    textAlign: "center",
+    fontWeight: "600"
   },
   registerBtn: {
     width: "80%",

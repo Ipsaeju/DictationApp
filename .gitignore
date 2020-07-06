@@ -24,6 +24,7 @@ DerivedData
 # Firebase
 #
 Firebase/firebaseconfig.js
+Firebase/ftpupload.js
 
 # Android/IntelliJ
 #
