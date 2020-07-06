@@ -2,7 +2,6 @@ import React from "react";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from "react-native-vector-icons/Feather";
 import Recorder from "./recorder";
-import Dashboard from "./dashboard";
 import SettingsScreen from "./settings";
 import viewStack from "./viewnav";
 

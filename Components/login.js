@@ -38,7 +38,7 @@ class Login extends React.Component {
       <ScrollView>
         <View>
           <ImageBackground source={require("../Assets/MedicalBackground.png")} style={styles.container}>
-            <Image source={require("../Assets/MDSolutionsLogo.png")}/>
+            <Image source={require("../Assets/MDSolutionsLogoSquare.png")}/>
             <Text style={styles.logo}>m⁺ Scribe</Text>
             {!!this.state.message && (
               <Text style={styles.warningText}>

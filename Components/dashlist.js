@@ -19,7 +19,6 @@ class DashList extends React.Component {
   }
 
   componentDidUpdate = () => {
-    this._getDictations();
     setTimeout(() => this.setState({message: ""}), 4000);
   }
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, ActivityIndicator, Text } from "react-native";
+import { View, StyleSheet, ActivityIndicator, Text, Image } from "react-native";
 import { withFirebaseHOC } from "../Firebase";
 
 class Preload extends React.Component {
@@ -21,11 +21,9 @@ class Preload extends React.Component {
         return(
             <View style={styles.container}>
                 <View style={styles.companyContainer}>
-                    <Text style={styles.companyBold}>md</Text>
-                    <Text style={styles.companyFine}>Solutions</Text>
-                    <Text style={styles.companyBold}>⁺</Text>
+                    <Image source={require("../Assets/MDSolutionsLogo.png")} resizeMethod="resize" resizeMode="contain"/>
                 </View>
-                <ActivityIndicator size="large" color="white"/>
+                <ActivityIndicator size="large" color="blue"/>
             </View>
         );
     }
@@ -35,24 +33,11 @@ const styles = StyleSheet.create({
     container: {
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#0d73de",
+        backgroundColor: "white",
         flex: 1
     },
     companyContainer: {
-        flexDirection: "row",
         marginBottom: 22
-    },
-    companyBold: {
-        color: "white",
-        fontWeight: "bold",
-        fontSize: 46,
-        fontFamily: "roboto"
-    },
-    companyFine: {
-        color: "#54eeff",
-        fontSize: 46,
-        fontFamily: "roboto",
-        fontWeight: "300"
     }
 });
 
