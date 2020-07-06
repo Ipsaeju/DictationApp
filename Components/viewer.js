@@ -31,7 +31,7 @@ class Viewer extends React.Component{
 
   _onSend = async () => {
     try{
-      await uploadToFilezilla(this.state.dictationPath);
+      await uploadToFilezilla(this.state.dictationPath, this.props.firebase.getCurrUserEmail());
       Alert.alert("Dictation successfully sent.");
       this.props.navigation.navigate("DashList");
     }catch(error){
