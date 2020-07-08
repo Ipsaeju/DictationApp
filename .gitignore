@@ -21,11 +21,10 @@ DerivedData
 *.ipa
 *.xcuserstate
 
-# Firebase
+# Firebase & FTP
 #
 Firebase/firebaseconfig.js
-Firebase/ftpupload.js
-
+Firebase/ftpconfig.js
 # Android/IntelliJ
 #
 build/

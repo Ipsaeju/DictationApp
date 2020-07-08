@@ -15,6 +15,9 @@ module.exports = {
     }),
   },
   resolver: {
-    sourceExts: ['js', 'json', 'ts', 'tsx', 'jsx']
+    sourceExts: ['js', 'json', 'ts', 'tsx', 'jsx'],
+    // extraNodeModules: {
+    //   ftpClient: require("ftp")
+    // }
   }
 };
