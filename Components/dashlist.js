@@ -7,6 +7,7 @@ import { ListItem } from "react-native-elements";
 
 class DashList extends React.Component {
 
+  _isMounted = false;
   state = {
     user: this.props.firebase.getCurrUserEmail(),
     message: "",
@@ -15,22 +16,31 @@ class DashList extends React.Component {
   };
   
   componentDidMount = () => {
+    this._isMounted = true;
     this._getDictations();
   }
 
+  componentWillUnmount = () => {
+    this._isMounted = false;
+  }
+
   componentDidUpdate = () => {
-    setTimeout(() => this.setState({message: ""}), 4000);
+    setTimeout(() => this.setState({message: ""}), 7000);
   }
 
   _getDictations = async () => {
-    try{
+    if(this._isMounted){
+      try{
         let response = await this.props.firebase.getDictationMetadata();
-        if(response == null) this.setState({emptyMessage: "You have no dictations to view or send. Make one!"});
+        if((response == null || response.length == 0) && this._isMounted) this.setState({emptyMessage: "You have no dictations to view or send. Record some dictations!"});
         else{
           this.setState({dictationList: response});
         }
-    }catch(error) {
-        this.setState({message: _handleStoreErr(error.code)});
+      }catch(error) {
+        if(this._isMounted){
+          this.setState({message: _handleStoreErr(error.code)});
+        }
+      }
     }
   }
 
@@ -87,7 +97,9 @@ const styles = StyleSheet.create({
   emptyText: {
     marginTop: 20,
     color: "#777777",
-    fontSize: 12
+    fontSize: 18,
+    alignContent: "center",
+    textAlign: "center"
   }
 });
 

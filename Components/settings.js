@@ -6,6 +6,7 @@ import Icon from "react-native-vector-icons/Feather";
 import aboutTxt from "../Assets/abouttxt";
 
 class SettingsScreen extends React.Component{
+  _isMounted = false;
 
   state = {
     message: "",
@@ -13,10 +14,15 @@ class SettingsScreen extends React.Component{
   };
 
   componentDidMount = () => {
+    this._isMounted = true;
     this.setState({
       message: "",
       settingsModalVisible: false
     });
+  }
+
+  componentWillUnmount = () => {
+    this._isMounted = false;
   }
 
   componentDidUpdate = () => {
@@ -27,7 +33,9 @@ class SettingsScreen extends React.Component{
     try{
       this.props.firebase.logout();
     }catch(error) {
-      this.setState({message: _handleAuthErr(error.code)});
+      if(this._isMounted){
+        this.setState({message: _handleAuthErr(error.code)});
+      }
     }
   }
 

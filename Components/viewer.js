@@ -29,15 +29,15 @@ class Viewer extends React.Component{
     }
   };
 
-  _onSend = async () => {
-    try{
-      await uploadToFilezilla(this.state.dictationPath, this.props.firebase.getCurrUserEmail(), this.state.dictationName);
-      Alert.alert("Dictation successfully sent.");
-      this.props.navigation.navigate("DashList");
-    }catch(error){
-      this.setState({message: "There was an error in sending the dictation to FileZilla. Please try again or contact a system admin."});
-    }
-  };
+  // _onSend = async () => {
+  //   try{
+  //     await uploadToFilezilla(this.state.dictationPath, this.props.firebase.getCurrUserEmail(), this.state.dictationName);
+  //     Alert.alert("Dictation successfully sent.");
+  //     this.props.navigation.navigate("DashList");
+  //   }catch(error){
+  //     this.setState({message: "There was an error in sending the dictation to FileZilla. Please try again or contact a system admin."});
+  //   }
+  // };
 
   render() {
     return(
@@ -51,9 +51,9 @@ class Viewer extends React.Component{
         <TouchableOpacity style={styles.btn} onPress={this._onDelete}>
           <Text style={styles.btnText}>Delete Dictation</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.btn} onPress={this._onSend}>
+        {/* <TouchableOpacity style={styles.btn} onPress={this._onSend}>
           <Text style={styles.btnText}>Upload to FileZilla</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity style={styles.btn} onPress={() => this.props.navigation.navigate("DashList")}>
           <Text style={styles.btnText}>Return to Dashboard</Text>
         </TouchableOpacity>
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     width: "80%",
-    backgroundColor: "#fb5b5a",
+    backgroundColor: "#1754e3",
     borderRadius: 25,
     height: 50,
     alignItems: "center",

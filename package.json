@@ -30,7 +30,6 @@
     "react-native-screens": "^2.4.0",
     "react-native-vector-icons": "^6.6.0",
     "react-native-voice-recorder": "^1.0.2",
-    "ssh2-sftp-client": "^5.2.0",
     "websocket-extensions": "^0.1.4"
   },
   "devDependencies": {

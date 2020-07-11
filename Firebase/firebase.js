@@ -37,16 +37,16 @@ const Firebase = {
     },
     uploadToReference: (file, metadata, fileName) => {
         let dictationRef = Firebase.getStorageRef();
-        return dictationRef.child(Firebase.getCurrUserId() + "/Dictations/" + fileName)
+        return dictationRef.child(Firebase.getCurrUserEmail() + "/Dictations/" + fileName)
         .putFile(file, { contentType: "audio/wav", customMetadata: metadata});
     },
     deleteDictation: (fileName) => {
         let dictationRef = Firebase.getStorageRef();
-        return dictationRef.child(Firebase.getCurrUserId() + "/Dictations/" + fileName).delete();
+        return dictationRef.child(Firebase.getCurrUserEmail() + "/Dictations/" + fileName).delete();
     },
     getUserDictations: () => {
         let dictationRef = Firebase.getStorageRef();
-        return dictationRef.child(Firebase.getCurrUserId() + "/Dictations/").listAll();
+        return dictationRef.child(Firebase.getCurrUserEmail() + "/Dictations/").listAll();
     },
     getDictationMetadata: () => {
         let listResult = Firebase.getUserDictations();

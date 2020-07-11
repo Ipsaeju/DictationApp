@@ -4,6 +4,7 @@ import { withFirebaseHOC } from '../Firebase';
 import { _handleAuthErr } from "./Alerts/errors";
 
 class Login extends React.Component {
+  _isMounted = false;
   state = {
     email: "",
     password: "",
@@ -11,26 +12,32 @@ class Login extends React.Component {
   };
 
   componentDidMount = () => {
-    this.setState({message: ""});
+    this._isMounted = true;
+  }
+
+  componentWillUnmount = () => {
+    this._isMounted = false;
   }
 
   componentDidUpdate = () => {
-    setTimeout(() => this.setState({message: ""}), 4000);
+    setTimeout(() => this.setState({message: ""}), 7000);
   }
 
   _userLogin = async () => {
-    var params = {
-      email: this.state.email,
-      password: this.state.password
-    };
-
+    if(this._isMounted){
+      var params = {
+        email: this.state.email,
+        password: this.state.password
+      };
+    }
     try{
       const response = await this.props.firebase.login(params.email, params.password);
       if(response.user) this.props.navigation.navigate("Dashboard");
     }catch(error) {
-      this.setState({message: _handleAuthErr(error.code)});
+      if(this._isMounted){
+        this.setState({message: _handleAuthErr(error.code)});
+      }
     }
-
   }
 
   render() {

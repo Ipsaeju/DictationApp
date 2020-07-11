@@ -5,6 +5,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { _handleAuthErr } from "./Alerts/errors";
 
 class Register extends React.Component {
+  _isMounted = false;
   state = {
     email: "",
     password: "",
@@ -13,11 +14,15 @@ class Register extends React.Component {
   };
 
   componentDidMount = () => {
-    this.setState({message: ""});
+    this._isMounted = true;
+  }
+
+  componentWillUnmount = () => {
+    this._isMounted = false;
   }
 
   componentDidUpdate = () => {
-    setTimeout(() => this.setState({message: ""}), 4000);
+    setTimeout(() => this.setState({message: ""}), 7000);
   }
 
   _createAccount = async () => {
@@ -27,7 +32,7 @@ class Register extends React.Component {
       confirmPass: this.state.confirmPass
     };
 
-    if(params.password !== params.confirmPass) this.setState({message: "The password does not match"});
+    if((params.password !== params.confirmPass) && (this._isMounted)) this.setState({message: "The password does not match"});
 
     try{
       const response = await this.props.firebase.register(params.email, params.password);
@@ -38,8 +43,9 @@ class Register extends React.Component {
         this.props.navigation.navigate("Login");
       }
     }catch(error){
-      console.log(error);
-      this.setState({message: _handleAuthErr(error.code)});
+      if(this._isMounted){
+        this.setState({message: _handleAuthErr(error.code)});
+      }
     }
   }
 
