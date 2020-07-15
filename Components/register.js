@@ -37,9 +37,6 @@ class Register extends React.Component {
     try{
       const response = await this.props.firebase.register(params.email, params.password);
       if(response.user.uid){
-        const { uid } = response.user;
-        const userInfo = { email, password, uid };
-        await this.props.firebase.newUserAdd(userInfo);
         this.props.navigation.navigate("Login");
       }
     }catch(error){

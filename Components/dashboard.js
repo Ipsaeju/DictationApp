@@ -1,7 +1,6 @@
 import React from "react";
-import { Text, TouchableOpacity, StyleSheet, View, FlatList, ScrollView } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { withFirebaseHOC } from '../Firebase';
-import ErrorMsgHandler from "./Alerts/errors";
 
 class Dashboard extends React.Component {
 

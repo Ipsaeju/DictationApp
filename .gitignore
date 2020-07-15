@@ -45,6 +45,10 @@ buck-out/
 *.keystore
 !debug.keystore
 
+#GoogleService
+ios/DictationApp.xcodeproj/GoogleService-Info.plist
+android/app/google-services.json
+
 # fastlane
 #
 # It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the

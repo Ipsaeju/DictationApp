@@ -31,7 +31,7 @@ class SettingsScreen extends React.Component{
 
   _userLogout = async () => {
     try{
-      this.props.firebase.logout();
+      await this.props.firebase.logout();
     }catch(error) {
       if(this._isMounted){
         this.setState({message: _handleAuthErr(error.code)});
