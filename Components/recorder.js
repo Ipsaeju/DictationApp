@@ -1,6 +1,6 @@
 import React from "react";
 import { RNVoiceRecorder } from "react-native-voice-recorder";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ImageBackground, ScrollView, Alert } from "react-native";
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ImageBackground, Alert } from "react-native";
 import { _onDeleteDictation } from "./Alerts/warnings";
 import { withFirebaseHOC } from '../Firebase';
 import { _handleStoreErr } from "./Alerts/errors";
@@ -45,9 +45,8 @@ class Recorder extends React.Component{
             try{
               let uploadTask = await this.props.firebase.uploadToReference(file, metadata, this.state.dictationName);
               if(this._isMounted){
-                this.setState({successMessage: "Upload success"});
+                Alert.alert("Upload Success");
               }
-              console.log(uploadTask);
             }catch(error){
               if(this._isMounted){
                 this.setState({message: _handleStoreErr(error.code)});
@@ -104,46 +103,42 @@ class Recorder extends React.Component{
  
   render() {
     return (
-      <View>
-        <ScrollView>
-          <ImageBackground source={require("../Assets/MedicalBackground.png")} style={styles.container}>
-            {!!this.state.message && (
-              <Text style={styles.warningText}>
-                {this.state.message}
-              </Text>
-            )}
-            {!!this.state.successMessage && (
-              <Text style={styles.successText}>
-                {this.state.successMessage}
-              </Text>
-            )}
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder="Dictation Name"
-                placeholderTextColor="#c7f1ff"
-                autoCapitalize="none"
-                autoCorrect={false}
-                onChangeText={text => this.setState({ dictationName:text })}/>
-            </View>
-            <View style={styles.recordButtonsView}>
-              <Text style={styles.helperTxt}>Ready to Record</Text>
-              <TouchableOpacity onPress={this._onRecord}>
-                <Image style={styles.buttons} source={require("../Assets/RecordButtonIdle.png")}/>
-              </TouchableOpacity>
-              <Text style={styles.helperTxt}>Playback  /  Delete</Text>
-            </View>
-            <View style={styles.dictationView}>
-              <TouchableOpacity onPress={this._onPlayback}>
-                <Image style={styles.buttons} source={require("../Assets/PlayButton.png")}/>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={this._onDelete}>
-                <Image style={styles.buttons} source={require("../Assets/DeleteButton.png")}/>
-              </TouchableOpacity>
-            </View>
-          </ImageBackground>
-        </ScrollView>
-      </View>
+      <ImageBackground source={require("../Assets/MedicalBackground.png")} style={styles.container}>
+        {!!this.state.message && (
+          <Text style={styles.warningText}>
+            {this.state.message}
+          </Text>
+        )}
+        {!!this.state.successMessage && (
+          <Text style={styles.successText}>
+            {this.state.successMessage}
+          </Text>
+        )}
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.inputText}
+            placeholder="Dictation Name"
+            placeholderTextColor="#c7f1ff"
+            autoCapitalize="none"
+            autoCorrect={false}
+            onChangeText={text => this.setState({ dictationName:text })}/>
+        </View>
+        <View style={styles.recordButtonsView}>
+          <Text style={styles.helperTxt}>Ready to Record</Text>
+          <TouchableOpacity onPress={this._onRecord}>
+            <Image style={styles.buttons} source={require("../Assets/RecordButtonIdle.png")}/>
+          </TouchableOpacity>
+          <Text style={styles.helperTxt}>Playback  /  Delete</Text>
+        </View>
+        <View style={styles.dictationView}>
+          <TouchableOpacity onPress={this._onPlayback}>
+            <Image style={styles.buttons} source={require("../Assets/PlayButton.png")}/>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._onDelete}>
+            <Image style={styles.buttons} source={require("../Assets/DeleteButton.png")}/>
+          </TouchableOpacity>
+        </View>
+      </ImageBackground>
     );
   }
 }
@@ -153,8 +148,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
     alignItems: "center",
-    justifyContent: "center",
-    paddingTop: 10
+    justifyContent: "center"
   },
   recordButtonsView: {
     alignContent: "center",

@@ -1,9 +1,6 @@
 platform :ios, '9.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-# Override Firebase SDK Version
-$FirebaseSDKVersion = '6.13.0'
-
 def add_flipper_pods!
   version = '~> 0.33.1'
   pod 'FlipperKit', version, :configuration => 'Debug'
@@ -44,6 +41,10 @@ target 'DictationApp' do
   pod 'React-RCTText', :path => '../node_modules/react-native/Libraries/Text'
   pod 'React-RCTVibration', :path => '../node_modules/react-native/Libraries/Vibration'
   pod 'React-Core/RCTWebSocket', :path => '../node_modules/react-native/'
+
+  pod 'Firebase/CoreOnly'
+  pod 'Firebase/Auth'
+  pod 'Firebase/Storage'
 
   pod 'React-cxxreact', :path => '../node_modules/react-native/ReactCommon/cxxreact'
   pod 'React-jsi', :path => '../node_modules/react-native/ReactCommon/jsi'
