@@ -21,11 +21,10 @@ DerivedData
 *.ipa
 *.xcuserstate
 
-# Firebase
+# Firebase & FTP
 #
 Firebase/firebaseconfig.js
-Firebase/ftpupload.js
-
+Firebase/ftpconfig.js
 # Android/IntelliJ
 #
 build/
@@ -45,6 +44,10 @@ buck-out/
 \.buckd/
 *.keystore
 !debug.keystore
+
+#GoogleService
+ios/DictationApp.xcodeproj/GoogleService-Info.plist
+android/app/google-services.json
 
 # fastlane
 #

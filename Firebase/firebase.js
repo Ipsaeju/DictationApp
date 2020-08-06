@@ -1,52 +1,44 @@
-import "@react-native-firebase/auth";
-import * as firebase from "firebase";
-import firebaseConfig from "./firebaseconfig";
 import "@react-native-firebase/app";
 import storage from "@react-native-firebase/storage";
+import auth from "@react-native-firebase/auth";
 
-
-firebase.initializeApp(firebaseConfig);
-dUid = "";
 const Firebase = {
     login: (email, password) => {
-        return firebase.auth().signInWithEmailAndPassword(email, password);
+        return auth().signInWithEmailAndPassword(email, password);
     },
     register: (email, password) => {
-        return firebase.auth().createUserWithEmailAndPassword(email, password);
+        return auth().createUserWithEmailAndPassword(email, password);
     },
     logout: () => {
-        return firebase.auth().signOut();
+        return auth().signOut();
     },
     resetPass: (email) => {
-        return firebase.auth().sendPasswordResetEmail(email);
-    },
-    newUserAdd: (userInfo) => {
-        return firebase.firestore().collection("Users").doc(`${userInfo.uid}`).set(userInfo);
+        return auth().sendPasswordResetEmail(email);
     },
     checkUserAuth: (user) => {
-        return firebase.auth().onAuthStateChanged(user);
+        return auth().onAuthStateChanged(user);
     },
     getCurrUserEmail: () => {
-        return firebase.auth().currentUser.email;
+        return auth().currentUser.email;
     },
     getCurrUserId: () => {
-        return firebase.auth().currentUser.uid;
+        return auth().currentUser.uid;
     },
     getStorageRef: () => {
         return storage().ref();
     },
     uploadToReference: (file, metadata, fileName) => {
         let dictationRef = Firebase.getStorageRef();
-        return dictationRef.child(Firebase.getCurrUserId() + "/Dictations/" + fileName)
+        return dictationRef.child(Firebase.getCurrUserEmail() + "/Dictations/" + fileName)
         .putFile(file, { contentType: "audio/wav", customMetadata: metadata});
     },
     deleteDictation: (fileName) => {
         let dictationRef = Firebase.getStorageRef();
-        return dictationRef.child(Firebase.getCurrUserId() + "/Dictations/" + fileName).delete();
+        return dictationRef.child(Firebase.getCurrUserEmail() + "/Dictations/" + fileName).delete();
     },
     getUserDictations: () => {
         let dictationRef = Firebase.getStorageRef();
-        return dictationRef.child(Firebase.getCurrUserId() + "/Dictations/").listAll();
+        return dictationRef.child(Firebase.getCurrUserEmail() + "/Dictations/").listAll();
     },
     getDictationMetadata: () => {
         let listResult = Firebase.getUserDictations();
